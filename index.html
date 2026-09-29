@@ -9,12 +9,12 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Archerd">
 <title>Archerd — Music Made Simple</title>
-<link rel="manifest" id="manifest-link">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%236C5CE7'/%3E%3Ctext x='50' y='68' font-family='Arial' font-size='56' font-weight='800' fill='white' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E">
 <style>
 /* ============================================================
    ARCHERD CSS
    ============================================================ */
-
 :root {
   --accent: #6C5CE7;
   --accent-2: #A29BFE;
@@ -32,7 +32,6 @@
   --warn: #F59F00;
   --radius: 18px;
   --radius-sm: 12px;
-  --radius-lg: 24px;
   --shadow-sm: 0 2px 8px rgba(20,20,40,0.06);
   --shadow-md: 0 8px 24px rgba(20,20,40,0.08);
   --shadow-lg: 0 16px 48px rgba(20,20,40,0.14);
@@ -41,1196 +40,294 @@
   --safe-b: env(safe-area-inset-bottom, 0px);
   --safe-t: env(safe-area-inset-top, 0px);
 }
-
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
 html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  background: var(--bg);
-  color: var(--text);
+  margin: 0; padding: 0; height: 100%;
+  background: var(--bg); color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", "Helvetica Neue", Roboto, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   overscroll-behavior-y: none;
 }
-
-body {
-  overflow-x: hidden;
-  min-height: 100vh;
-  min-height: 100dvh;
-}
-
-button {
-  font-family: inherit;
-  cursor: pointer;
-  border: none;
-  background: none;
-  color: inherit;
-  padding: 0;
-}
-
-input, textarea, select {
-  font-family: inherit;
-  color: inherit;
-}
-
+body { overflow-x: hidden; min-height: 100vh; min-height: 100dvh; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; padding: 0; }
+input, textarea, select { font-family: inherit; color: inherit; }
 .hidden { display: none !important; }
 
-.app {
-  min-height: 100vh;
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-
-.pages {
-  flex: 1;
-  padding-bottom: calc(var(--nav-h) + var(--mini-h) + var(--safe-b) + 12px);
-  transition: padding-bottom .25s ease;
-}
-
-.pages.no-mini {
-  padding-bottom: calc(var(--nav-h) + var(--safe-b) + 12px);
-}
-
-.page {
-  display: none;
-  padding: calc(var(--safe-t) + 22px) 20px 24px;
-  animation: pageIn .3s cubic-bezier(.2,.7,.3,1);
-}
-
+.app { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; position: relative; }
+.pages { flex: 1; padding-bottom: calc(var(--nav-h) + var(--mini-h) + var(--safe-b) + 12px); transition: padding-bottom .25s ease; }
+.pages.no-mini { padding-bottom: calc(var(--nav-h) + var(--safe-b) + 12px); }
+.page { display: none; padding: calc(var(--safe-t) + 22px) 20px 24px; animation: pageIn .3s cubic-bezier(.2,.7,.3,1); }
 .page.active { display: block; }
-
-@keyframes pageIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+@keyframes pageIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
 h1, h2, h3, h4 { margin: 0; font-weight: 800; letter-spacing: -0.02em; }
 h1 { font-size: 28px; line-height: 1.15; }
 h2 { font-size: 20px; line-height: 1.2; }
 h3 { font-size: 16px; }
 p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
-
-.section-title {
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-3);
-  margin-bottom: 12px;
-}
+.section-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-3); margin-bottom: 12px; }
 
 .home-hero { padding: 8px 4px 24px; }
-
-.hero-badge {
-  display: inline-block;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.18em;
-  color: var(--accent);
-  background: var(--accent-soft);
-  padding: 6px 12px;
-  border-radius: 999px;
-  margin-bottom: 14px;
-}
-
-.hero-title {
-  font-size: 34px;
-  line-height: 1.08;
-  margin-bottom: 8px;
-  background: linear-gradient(135deg, #0E0E12 0%, #4834D4 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
+.hero-badge { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 0.18em; color: var(--accent); background: var(--accent-soft); padding: 6px 12px; border-radius: 999px; margin-bottom: 14px; }
+.hero-title { font-size: 34px; line-height: 1.08; margin-bottom: 8px; background: linear-gradient(135deg, #0E0E12 0%, #4834D4 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 .hero-sub { font-size: 15px; color: var(--text-2); max-width: 320px; }
-
-.home-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 8px;
-}
-
-.home-tile {
-  background: var(--bg-2);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 18px 16px;
-  text-align: left;
-  transition: transform .18s ease, box-shadow .25s ease, background .2s ease;
-  display: flex;
-  flex-direction: column;
-  gap: 34px;
-  min-height: 130px;
-  position: relative;
-  overflow: hidden;
-}
-
+.home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+.home-tile { background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 16px; text-align: left; transition: transform .18s ease, box-shadow .25s ease, background .2s ease; display: flex; flex-direction: column; gap: 34px; min-height: 130px; }
 .home-tile:active { transform: scale(.97); }
 .home-tile:hover { box-shadow: var(--shadow-md); background: #fff; }
-
-.home-tile .tile-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 6px 18px rgba(108,92,231,0.35);
-}
-
+.home-tile .tile-icon { width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 18px rgba(108,92,231,0.35); }
 .home-tile .tile-icon svg { width: 22px; height: 22px; }
 .home-tile .tile-label { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; }
 .home-tile .tile-desc { font-size: 12px; color: var(--text-3); margin-top: 2px; }
-.home-tile.wide { grid-column: span 2; min-height: 90px; gap: 16px; }
-.home-tile.wide .tile-top { display: flex; align-items: center; gap: 14px; }
-
-.home-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-top: 22px;
-}
-
-.stat {
-  background: var(--bg-2);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  padding: 12px 10px;
-  text-align: center;
-}
-
+.home-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 22px; }
+.stat { background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 12px 10px; text-align: center; }
 .stat .stat-val { font-size: 18px; font-weight: 800; color: var(--text); }
 .stat .stat-lbl { font-size: 11px; color: var(--text-3); margin-top: 2px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
 
 .page-header { margin-bottom: 20px; }
 .page-header h1 { font-size: 26px; margin-bottom: 4px; }
 
-.dl-card {
-  background: var(--bg-2);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 16px;
-  margin-bottom: 14px;
-}
-
-.dl-input-wrap {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  background: #fff;
-  border: 1.5px solid var(--line);
-  border-radius: 14px;
-  padding: 4px 6px 4px 14px;
-  transition: border-color .2s ease, box-shadow .2s ease;
-}
-
-.dl-input-wrap:focus-within {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 4px rgba(108,92,231,0.12);
-}
-
-.dl-input-wrap input {
-  flex: 1;
-  border: none;
-  outline: none;
-  background: transparent;
-  font-size: 14px;
-  padding: 12px 0;
-  color: var(--text);
-}
-
+.dl-card { background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; margin-bottom: 14px; }
+.dl-input-wrap { display: flex; gap: 8px; align-items: center; background: #fff; border: 1.5px solid var(--line); border-radius: 14px; padding: 4px 6px 4px 14px; transition: border-color .2s ease, box-shadow .2s ease; }
+.dl-input-wrap:focus-within { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(108,92,231,0.12); }
+.dl-input-wrap input { flex: 1; border: none; outline: none; background: transparent; font-size: 14px; padding: 12px 0; color: var(--text); min-width: 0; }
 .dl-input-wrap input::placeholder { color: var(--text-3); }
-
-.btn-primary {
-  background: linear-gradient(135deg, var(--accent), var(--accent-3));
-  color: #fff;
-  font-weight: 700;
-  font-size: 14px;
-  padding: 12px 18px;
-  border-radius: 12px;
-  transition: transform .15s ease, box-shadow .2s ease, opacity .2s ease;
-  box-shadow: 0 6px 18px rgba(108,92,231,0.35);
-  white-space: nowrap;
-}
-
+.btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-3)); color: #fff; font-weight: 700; font-size: 14px; padding: 12px 18px; border-radius: 12px; transition: transform .15s ease, box-shadow .2s ease, opacity .2s ease; box-shadow: 0 6px 18px rgba(108,92,231,0.35); white-space: nowrap; }
 .btn-primary:active { transform: scale(.96); }
 .btn-primary:disabled { opacity: .5; pointer-events: none; }
-
-.btn-ghost {
-  background: var(--bg-3);
-  color: var(--text);
-  font-weight: 600;
-  font-size: 13px;
-  padding: 10px 14px;
-  border-radius: 10px;
-  transition: background .2s ease, transform .15s ease;
-}
-
+.btn-ghost { background: var(--bg-3); color: var(--text); font-weight: 600; font-size: 13px; padding: 10px 14px; border-radius: 10px; transition: background .2s ease, transform .15s ease; }
 .btn-ghost:active { transform: scale(.96); }
-
-.dl-hint {
-  font-size: 12px;
-  color: var(--text-3);
-  margin-top: 10px;
-  display: flex;
-  gap: 6px;
-  align-items: flex-start;
-  line-height: 1.45;
-}
-
+.dl-hint { font-size: 12px; color: var(--text-3); margin-top: 10px; display: flex; gap: 6px; align-items: flex-start; line-height: 1.45; }
 .dl-platforms { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-
-.chip {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-2);
-  background: #fff;
-  border: 1px solid var(--line);
-  padding: 6px 10px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-}
-
+.chip { font-size: 11px; font-weight: 700; color: var(--text-2); background: #fff; border: 1px solid var(--line); padding: 6px 10px; border-radius: 999px; display: inline-flex; align-items: center; gap: 5px; }
 .chip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
 
-.dl-status {
-  margin-top: 14px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 14px;
-  display: none;
-}
-
+.dl-status { margin-top: 14px; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: none; }
 .dl-status.show { display: block; animation: pageIn .25s ease; }
-
-.dl-status .status-head {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.status-spinner {
-  width: 18px;
-  height: 18px;
-  border: 2.5px solid var(--accent-soft);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin .8s linear infinite;
-  flex-shrink: 0;
-}
-
-.status-spinner.done {
-  border: none;
-  background: var(--success);
-  animation: none;
-  position: relative;
-}
-.status-spinner.done::after {
-  content: '';
-  position: absolute;
-  left: 5px; top: 2px;
-  width: 5px; height: 9px;
-  border: solid #fff;
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
-}
-
-.status-spinner.error {
-  border: none;
-  background: var(--danger);
-  animation: none;
-  position: relative;
-}
-.status-spinner.error::before,
-.status-spinner.error::after {
-  content: '';
-  position: absolute;
-  left: 8px; top: 3px;
-  width: 2px; height: 12px;
-  background: #fff;
-  border-radius: 1px;
-}
+.dl-status .status-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.status-spinner { width: 18px; height: 18px; border: 2.5px solid var(--accent-soft); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; flex-shrink: 0; }
+.status-spinner.done { border: none; background: var(--success); animation: none; position: relative; }
+.status-spinner.done::after { content: ''; position: absolute; left: 5px; top: 2px; width: 5px; height: 9px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.status-spinner.error { border: none; background: var(--danger); animation: none; position: relative; }
+.status-spinner.error::before, .status-spinner.error::after { content: ''; position: absolute; left: 8px; top: 3px; width: 2px; height: 12px; background: #fff; border-radius: 1px; }
 .status-spinner.error::before { transform: rotate(45deg); }
 .status-spinner.error::after { transform: rotate(-45deg); }
-
 @keyframes spin { to { transform: rotate(360deg); } }
-
 .status-text { font-size: 13px; font-weight: 600; color: var(--text); }
-.status-sub { font-size: 11px; color: var(--text-3); margin-top: 2px; }
-
-.progress-bar {
-  height: 6px;
-  background: var(--bg-3);
-  border-radius: 999px;
-  overflow: hidden;
-  margin-top: 10px;
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
-  border-radius: 999px;
-  transition: width .3s ease;
-  width: 0%;
-}
-
-.dl-steps {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 14px;
-  font-size: 10px;
-  color: var(--text-3);
-  font-weight: 600;
-  letter-spacing: .02em;
-  gap: 4px;
-}
-
+.status-sub { font-size: 11px; color: var(--text-3); margin-top: 2px; word-break: break-word; }
+.progress-bar { height: 6px; background: var(--bg-3); border-radius: 999px; overflow: hidden; margin-top: 10px; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); border-radius: 999px; transition: width .3s ease; width: 0%; }
+.dl-steps { display: flex; justify-content: space-between; margin-top: 14px; font-size: 10px; color: var(--text-3); font-weight: 600; letter-spacing: .02em; gap: 4px; }
 .dl-step { flex: 1; text-align: center; opacity: .5; transition: opacity .2s, color .2s; }
 .dl-step.active { opacity: 1; color: var(--accent); }
 .dl-step.done { opacity: 1; color: var(--success); }
 
-.api-config {
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px dashed var(--line);
-}
-
-.api-config summary {
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-2);
-  list-style: none;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
+.api-config { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--line); }
+.api-config summary { cursor: pointer; font-size: 12px; font-weight: 700; color: var(--text-2); list-style: none; display: flex; align-items: center; gap: 8px; }
 .api-config summary::-webkit-details-marker { display: none; }
 .api-config[open] summary { margin-bottom: 10px; }
-
-.api-config input {
-  width: 100%;
-  border: 1.5px solid var(--line);
-  border-radius: 10px;
-  padding: 10px 12px;
-  font-size: 12px;
-  outline: none;
-  background: #fff;
-  margin-bottom: 8px;
-}
+.api-config input { width: 100%; border: 1.5px solid var(--line); border-radius: 10px; padding: 10px 12px; font-size: 12px; outline: none; background: #fff; margin-bottom: 8px; }
 .api-config input:focus { border-color: var(--accent); }
 
 .lib-toolbar { display: flex; gap: 8px; margin-bottom: 14px; }
-
-.search-wrap {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--bg-2);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 0 12px;
-}
-
+.search-wrap { flex: 1; display: flex; align-items: center; gap: 8px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; padding: 0 12px; min-width: 0; }
 .search-wrap svg { width: 16px; height: 16px; color: var(--text-3); flex-shrink: 0; }
-
-.search-wrap input {
-  flex: 1;
-  border: none;
-  outline: none;
-  background: transparent;
-  font-size: 13px;
-  padding: 11px 0;
-  color: var(--text);
-}
-
-.sort-select {
-  background: var(--bg-2);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 0 10px;
-  font-size: 12px;
-  font-weight: 600;
-  outline: none;
-  color: var(--text);
-  cursor: pointer;
-}
-
+.search-wrap input { flex: 1; border: none; outline: none; background: transparent; font-size: 13px; padding: 11px 0; color: var(--text); min-width: 0; }
+.sort-select { background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; padding: 0 10px; font-size: 12px; font-weight: 600; outline: none; color: var(--text); cursor: pointer; }
 .lib-actions { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
 .lib-actions .btn-ghost.active { background: var(--accent); color: #fff; }
-
 .lib-list { display: flex; flex-direction: column; gap: 6px; }
-
-.lib-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px;
-  border-radius: 14px;
-  transition: background .15s ease, transform .12s ease;
-  cursor: pointer;
-  position: relative;
-}
-
+.lib-item { display: flex; align-items: center; gap: 12px; padding: 8px; border-radius: 14px; transition: background .15s ease, transform .12s ease; cursor: pointer; position: relative; }
 .lib-item:active { transform: scale(.99); }
 .lib-item:hover { background: var(--bg-2); }
 .lib-item.playing { background: var(--accent-soft); }
-
-.lib-thumb {
-  width: 52px;
-  height: 52px;
-  border-radius: 10px;
-  object-fit: cover;
-  flex-shrink: 0;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  position: relative;
-  overflow: hidden;
-}
-
+.lib-thumb { width: 52px; height: 52px; border-radius: 10px; object-fit: cover; flex-shrink: 0; background: linear-gradient(135deg, var(--accent), var(--accent-2)); position: relative; overflow: hidden; }
 .lib-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
 .lib-info { flex: 1; min-width: 0; }
-
-.lib-title {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  letter-spacing: -0.01em;
-}
-
-.lib-meta {
-  font-size: 12px;
-  color: var(--text-3);
-  margin-top: 3px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.lib-meta .src-badge {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--accent);
-  background: var(--accent-soft);
-  padding: 2px 6px;
-  border-radius: 4px;
-  letter-spacing: .04em;
-}
-
-.lib-del {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-3);
-  flex-shrink: 0;
-  transition: background .15s, color .15s;
-}
-
+.lib-title { font-size: 14px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.01em; }
+.lib-meta { font-size: 12px; color: var(--text-3); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; gap: 8px; align-items: center; }
+.lib-meta .src-badge { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); padding: 2px 6px; border-radius: 4px; letter-spacing: .04em; }
+.lib-del { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--text-3); flex-shrink: 0; transition: background .15s, color .15s; }
 .lib-del:hover { background: #FFE5EA; color: var(--danger); }
 .lib-del svg { width: 16px; height: 16px; }
-
-.empty-state {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--text-3);
-}
-
+.empty-state { text-align: center; padding: 60px 20px; color: var(--text-3); }
 .empty-state svg { width: 64px; height: 64px; margin-bottom: 16px; opacity: .35; }
 .empty-state h3 { color: var(--text-2); font-size: 16px; margin-bottom: 6px; }
 .empty-state p { font-size: 13px; max-width: 260px; margin: 0 auto; }
-
-.storage-info {
-  background: var(--bg-2);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 12px 14px;
-  margin-bottom: 14px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 12px;
-}
-
+.storage-info { background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
 .storage-info .si-label { color: var(--text-2); font-weight: 600; }
 .storage-info .si-val { color: var(--text); font-weight: 800; }
 
-.mini-player {
-  position: fixed;
-  left: 8px;
-  right: 8px;
-  bottom: calc(var(--nav-h) + var(--safe-b) + 8px);
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  box-shadow: var(--shadow-lg);
-  padding: 8px 10px 8px 8px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  z-index: 40;
-  transform: translateY(0);
-  transition: transform .3s cubic-bezier(.2,.7,.3,1), opacity .3s;
-}
-
+.mini-player { position: fixed; left: 8px; right: 8px; bottom: calc(var(--nav-h) + var(--safe-b) + 8px); background: rgba(255,255,255,0.92); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow-lg); padding: 8px 10px 8px 8px; display: flex; align-items: center; gap: 10px; z-index: 40; transition: transform .3s cubic-bezier(.2,.7,.3,1), opacity .3s; }
 .mini-player.hidden { display: none !important; }
-
-.mini-thumb {
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
-  object-fit: cover;
-  flex-shrink: 0;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  cursor: pointer;
-}
-
+.mini-thumb { width: 48px; height: 48px; border-radius: 10px; object-fit: cover; flex-shrink: 0; background: linear-gradient(135deg, var(--accent), var(--accent-2)); cursor: pointer; }
 .mini-info { flex: 1; min-width: 0; cursor: pointer; }
-
-.mini-title {
-  font-size: 13px;
-  font-weight: 700;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: var(--text);
-}
-
-.mini-artist {
-  font-size: 11px;
-  color: var(--text-3);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-top: 2px;
-}
-
-.mini-progress {
-  position: absolute;
-  left: 8px;
-  right: 8px;
-  bottom: 2px;
-  height: 2px;
-  background: transparent;
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.mini-progress-fill {
-  height: 100%;
-  background: var(--accent);
-  width: 0%;
-  transition: width .15s linear;
-}
-
-.mini-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text);
-  transition: background .15s, transform .12s;
-  flex-shrink: 0;
-}
-
+.mini-title { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text); }
+.mini-artist { font-size: 11px; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+.mini-progress { position: absolute; left: 8px; right: 8px; bottom: 2px; height: 2px; background: transparent; border-radius: 2px; overflow: hidden; }
+.mini-progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width .15s linear; }
+.mini-btn { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text); transition: background .15s, transform .12s; flex-shrink: 0; }
 .mini-btn:active { transform: scale(.9); }
-.mini-btn.play {
-  background: var(--accent);
-  color: #fff;
-  box-shadow: 0 6px 14px rgba(108,92,231,0.4);
-}
+.mini-btn.play { background: var(--accent); color: #fff; box-shadow: 0 6px 14px rgba(108,92,231,0.4); }
 .mini-btn.play:hover { background: var(--accent-3); }
 .mini-btn svg { width: 18px; height: 18px; }
 
-.bottom-nav {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: calc(var(--nav-h) + var(--safe-b));
-  padding-bottom: var(--safe-b);
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-top: 1px solid var(--line);
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  z-index: 45;
-}
-
-.nav-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  color: var(--text-3);
-  font-size: 10px;
-  font-weight: 600;
-  transition: color .2s ease;
-  position: relative;
-}
-
+.bottom-nav { position: fixed; left: 0; right: 0; bottom: 0; height: calc(var(--nav-h) + var(--safe-b)); padding-bottom: var(--safe-b); background: rgba(255,255,255,0.92); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(4, 1fr); z-index: 45; }
+.nav-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--text-3); font-size: 10px; font-weight: 600; transition: color .2s ease; position: relative; }
 .nav-btn svg { width: 22px; height: 22px; transition: transform .2s ease; }
 .nav-btn.active { color: var(--accent); }
 .nav-btn.active svg { transform: translateY(-1px); }
+.nav-btn.active::before { content: ''; position: absolute; top: 6px; width: 32px; height: 3px; border-radius: 0 0 3px 3px; background: var(--accent); }
 
-.nav-btn.active::before {
-  content: '';
-  position: absolute;
-  top: 6px;
-  width: 32px;
-  height: 3px;
-  border-radius: 0 0 3px 3px;
-  background: var(--accent);
-}
-
-.full-player {
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(180deg, #1a1440 0%, #0E0E12 100%);
-  color: #fff;
-  z-index: 100;
-  transform: translateY(100%);
-  transition: transform .38s cubic-bezier(.2,.7,.3,1);
-  display: flex;
-  flex-direction: column;
-  padding: calc(var(--safe-t) + 12px) 22px calc(var(--safe-b) + 22px);
-  overflow: hidden;
-}
-
+.full-player { position: fixed; inset: 0; background: linear-gradient(180deg, #1a1440 0%, #0E0E12 100%); color: #fff; z-index: 100; transform: translateY(100%); transition: transform .38s cubic-bezier(.2,.7,.3,1); display: flex; flex-direction: column; padding: calc(var(--safe-t) + 12px) 22px calc(var(--safe-b) + 22px); overflow: hidden; }
 .full-player.open { transform: translateY(0); }
-
-.full-player::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 50% 0%, rgba(108,92,231,0.55) 0%, transparent 55%);
-  pointer-events: none;
-}
-
-.fp-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-  z-index: 2;
-  margin-bottom: 8px;
-}
-
-.fp-close {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  background: rgba(255,255,255,0.08);
-}
-
+.full-player::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 0%, rgba(108,92,231,0.55) 0%, transparent 55%); pointer-events: none; }
+.fp-top { display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 2; margin-bottom: 8px; }
+.fp-close { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; background: rgba(255,255,255,0.08); }
 .fp-close svg { width: 20px; height: 20px; }
-
-.fp-title-label {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  opacity: 0.6;
-  font-weight: 700;
-}
-
-.fp-cover-wrap {
-  flex: 0 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 12px 0 20px;
-  position: relative;
-  z-index: 2;
-}
-
-.fp-cover {
-  width: min(78vw, 340px);
-  height: min(78vw, 340px);
-  border-radius: 24px;
-  object-fit: cover;
-  box-shadow: 0 24px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
-  background: linear-gradient(135deg, var(--accent), var(--accent-3));
-  transition: transform .3s ease;
-}
-
+.fp-title-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.18em; opacity: 0.6; font-weight: 700; }
+.fp-cover-wrap { flex: 0 0 auto; display: flex; justify-content: center; align-items: center; margin: 12px 0 20px; position: relative; z-index: 2; }
+.fp-cover { width: min(78vw, 340px); height: min(78vw, 340px); border-radius: 24px; object-fit: cover; box-shadow: 0 24px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05); background: linear-gradient(135deg, var(--accent), var(--accent-3)); transition: transform .3s ease; }
 .full-player.playing .fp-cover { animation: coverPulse 6s ease-in-out infinite; }
-
-@keyframes coverPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.015); }
-}
-
-.fp-info {
-  text-align: center;
-  position: relative;
-  z-index: 2;
-  margin-bottom: 18px;
-}
-
-.fp-song-title {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 0 4px;
-}
-
-.fp-artist {
-  font-size: 14px;
-  opacity: 0.65;
-  margin-top: 5px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
+@keyframes coverPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.015); } }
+.fp-info { text-align: center; position: relative; z-index: 2; margin-bottom: 18px; }
+.fp-song-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 4px; }
+.fp-artist { font-size: 14px; opacity: 0.65; margin-top: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .fp-progress-wrap { position: relative; z-index: 2; margin-bottom: 4px; }
-
-.fp-progress {
-  width: 100%;
-  -webkit-appearance: none;
-  appearance: none;
-  height: 4px;
-  background: rgba(255,255,255,0.16);
-  border-radius: 999px;
-  outline: none;
-  cursor: pointer;
-  display: block;
-}
-
-.fp-progress::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-  cursor: pointer;
-}
-
-.fp-progress::-moz-range-thumb {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #fff;
-  border: none;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-  cursor: pointer;
-}
-
-.fp-times {
-  display: flex;
-  justify-content: space-between;
-  font-size: 11px;
-  opacity: 0.55;
-  margin-top: 8px;
-  font-variant-numeric: tabular-nums;
-  font-weight: 600;
-  letter-spacing: .02em;
-}
-
-.fp-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  margin-top: 22px;
-  position: relative;
-  z-index: 2;
-}
-
-.fp-btn {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  background: rgba(255,255,255,0.06);
-  transition: background .15s, transform .12s;
-}
-
+.fp-progress { width: 100%; -webkit-appearance: none; appearance: none; height: 4px; background: rgba(255,255,255,0.16); border-radius: 999px; outline: none; cursor: pointer; display: block; }
+.fp-progress::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.4); cursor: pointer; }
+.fp-progress::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: #fff; border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.4); cursor: pointer; }
+.fp-times { display: flex; justify-content: space-between; font-size: 11px; opacity: 0.55; margin-top: 8px; font-variant-numeric: tabular-nums; font-weight: 600; letter-spacing: .02em; }
+.fp-controls { display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 22px; position: relative; z-index: 2; }
+.fp-btn { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; background: rgba(255,255,255,0.06); transition: background .15s, transform .12s; }
 .fp-btn:active { transform: scale(.9); }
 .fp-btn:hover { background: rgba(255,255,255,0.12); }
 .fp-btn svg { width: 22px; height: 22px; }
-
-.fp-btn.main {
-  width: 74px;
-  height: 74px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-3));
-  box-shadow: 0 12px 32px rgba(108,92,231,0.5);
-}
-
+.fp-btn.main { width: 74px; height: 74px; background: linear-gradient(135deg, var(--accent), var(--accent-3)); box-shadow: 0 12px 32px rgba(108,92,231,0.5); }
 .fp-btn.main:hover { background: linear-gradient(135deg, var(--accent-3), var(--accent)); }
 .fp-btn.main svg { width: 30px; height: 30px; }
-
 .fp-btn.active { color: var(--accent-2); background: rgba(162,155,254,0.15); }
-
-.fp-extra {
-  display: flex;
-  justify-content: center;
-  gap: 28px;
-  margin-top: 18px;
-  position: relative;
-  z-index: 2;
-}
-
-.fp-extra-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  font-size: 10px;
-  font-weight: 700;
-  opacity: 0.55;
-  color: #fff;
-  transition: opacity .2s, color .2s;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-}
-
+.fp-extra { display: flex; justify-content: center; gap: 28px; margin-top: 18px; position: relative; z-index: 2; }
+.fp-extra-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; opacity: 0.55; color: #fff; transition: opacity .2s, color .2s; text-transform: uppercase; letter-spacing: .06em; }
 .fp-extra-btn.active { opacity: 1; color: var(--accent-2); }
 .fp-extra-btn svg { width: 18px; height: 18px; }
 
-.toast-wrap {
-  position: fixed;
-  left: 12px;
-  right: 12px;
-  bottom: calc(var(--nav-h) + var(--safe-b) + 12px);
-  z-index: 200;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  pointer-events: none;
-  transition: bottom .3s ease;
-}
-
+.toast-wrap { position: fixed; left: 12px; right: 12px; bottom: calc(var(--nav-h) + var(--safe-b) + 12px); z-index: 200; display: flex; flex-direction: column; gap: 8px; pointer-events: none; transition: bottom .3s ease; }
 .toast-wrap.with-mini { bottom: calc(var(--nav-h) + var(--mini-h) + var(--safe-b) + 16px); }
 .toast-wrap.player-open { display: none; }
-
-.toast {
-  background: rgba(20,20,30,0.95);
-  color: #fff;
-  padding: 12px 16px;
-  border-radius: 12px;
-  font-size: 13px;
-  font-weight: 600;
-  box-shadow: var(--shadow-lg);
-  animation: toastIn .3s ease;
-  pointer-events: auto;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  backdrop-filter: blur(10px);
-}
-
+.toast { background: rgba(20,20,30,0.95); color: #fff; padding: 12px 16px; border-radius: 12px; font-size: 13px; font-weight: 600; box-shadow: var(--shadow-lg); animation: toastIn .3s ease; pointer-events: auto; display: flex; align-items: center; gap: 10px; backdrop-filter: blur(10px); word-break: break-word; }
 .toast.error { background: rgba(255,77,109,0.96); }
 .toast.success { background: rgba(18,184,134,0.96); }
 .toast.info { background: rgba(108,92,231,0.96); }
+@keyframes toastIn { from { opacity: 0; transform: translateY(12px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-@keyframes toastIn {
-  from { opacity: 0; transform: translateY(12px) scale(.96); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.card {
-  background: var(--bg-2);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 16px;
-  margin-bottom: 12px;
-}
-
+.card { background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
 .faq-item { border-bottom: 1px solid var(--line); padding: 4px 0; }
 .faq-item:last-child { border-bottom: none; }
-
-.faq-q {
-  width: 100%;
-  text-align: left;
-  padding: 12px 0;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-}
-
+.faq-q { width: 100%; text-align: left; padding: 12px 0; font-size: 14px; font-weight: 700; color: var(--text); display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .faq-q svg { width: 16px; height: 16px; color: var(--text-3); transition: transform .25s ease; flex-shrink: 0; }
 .faq-item.open .faq-q svg { transform: rotate(180deg); }
-
-.faq-a {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height .3s ease, padding .3s ease;
-  font-size: 13px;
-  color: var(--text-2);
-  line-height: 1.55;
-}
-
+.faq-a { max-height: 0; overflow: hidden; transition: max-height .3s ease, padding .3s ease; font-size: 13px; color: var(--text-2); line-height: 1.55; }
 .faq-item.open .faq-a { max-height: 300px; padding-bottom: 14px; }
-
 .form-group { margin-bottom: 12px; }
-.form-group label {
-  display: block;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-2);
-  margin-bottom: 6px;
-  letter-spacing: .02em;
-}
-
-.form-group input,
-.form-group textarea {
-  width: 100%;
-  border: 1.5px solid var(--line);
-  border-radius: 12px;
-  padding: 12px 14px;
-  font-size: 14px;
-  outline: none;
-  background: #fff;
-  transition: border-color .2s, box-shadow .2s;
-  resize: vertical;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 4px rgba(108,92,231,0.12);
-}
-
+.form-group label { display: block; font-size: 12px; font-weight: 700; color: var(--text-2); margin-bottom: 6px; letter-spacing: .02em; }
+.form-group input, .form-group textarea { width: 100%; border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 14px; font-size: 14px; outline: none; background: #fff; transition: border-color .2s, box-shadow .2s; resize: vertical; }
+.form-group input:focus, .form-group textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(108,92,231,0.12); }
 .form-group textarea { min-height: 100px; }
 
-.device-card {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  background: var(--bg-2);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 14px;
-  margin-bottom: 10px;
-  transition: transform .15s ease, box-shadow .2s ease;
-}
-
+.device-card { display: flex; align-items: center; gap: 14px; background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; margin-bottom: 10px; transition: transform .15s ease, box-shadow .2s ease; }
 .device-card:hover { box-shadow: var(--shadow-sm); }
-
-.device-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  flex-shrink: 0;
-}
-
+.device-icon { width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; }
 .device-icon svg { width: 22px; height: 22px; }
 .device-info { flex: 1; }
 .device-name { font-size: 14px; font-weight: 700; }
 .device-note { font-size: 12px; color: var(--text-3); margin-top: 3px; line-height: 1.4; }
-
-.device-status {
-  font-size: 11px;
-  font-weight: 800;
-  color: var(--success);
-  background: rgba(18,184,134,0.12);
-  padding: 5px 9px;
-  border-radius: 999px;
-  letter-spacing: .04em;
-  flex-shrink: 0;
-}
-
+.device-status { font-size: 11px; font-weight: 800; color: var(--success); background: rgba(18,184,134,0.12); padding: 5px 9px; border-radius: 999px; letter-spacing: .04em; flex-shrink: 0; }
 .device-status.partial { color: var(--warn); background: rgba(245,159,0,0.12); }
-
-.skeleton {
-  background: linear-gradient(90deg, var(--bg-2) 0%, var(--bg-3) 50%, var(--bg-2) 100%);
-  background-size: 200% 100%;
-  animation: shimmer 1.4s infinite;
-  border-radius: 8px;
-}
-
-@keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
 
 @media (min-width: 640px) {
   .page { max-width: 640px; margin: 0 auto; padding-left: 28px; padding-right: 28px; }
   .hero-title { font-size: 42px; }
   .fp-cover { width: min(60vw, 380px); height: min(60vw, 380px); }
-  .home-grid { grid-template-columns: repeat(4, 1fr); }
-  .home-tile.wide { grid-column: span 4; }
-  .home-tile.wide .tile-top { justify-content: space-between; }
   .bottom-nav { max-width: 640px; margin: 0 auto; left: 50%; transform: translateX(-50%); border-radius: 20px 20px 0 0; }
   .mini-player { max-width: 640px; left: 50%; transform: translateX(-50%); }
   .toast-wrap { max-width: 620px; left: 50%; transform: translateX(-50%); }
 }
-
-@media (min-width: 1024px) {
-  .pages { padding-bottom: calc(var(--nav-h) + var(--mini-h) + 24px); }
-  .page { max-width: 800px; }
-  .home-hero { padding-top: 24px; }
-}
-
+@media (min-width: 1024px) { .page { max-width: 800px; } }
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
-
 .nav-btn, .mini-btn, .fp-btn, .home-tile { user-select: none; -webkit-user-select: none; }
 </style>
 </head>
 <body>
 
 <div class="app" id="app">
-
   <main class="pages no-mini" id="pages">
 
-    <!-- ================= HOME ================= -->
+    <!-- ===== HOME ===== -->
     <section class="page active" data-page="home">
       <div class="home-hero">
         <div class="hero-badge">ARCHERD</div>
         <h1 class="hero-title">Welcome to Archerd</h1>
         <p class="hero-sub">Music downloader &amp; player. Music made simple — download, simpan, dan putar tanpa ribet.</p>
       </div>
-
       <div class="home-grid">
         <button class="home-tile" data-goto="download">
-          <div class="tile-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          </div>
-          <div>
-            <div class="tile-label">Download</div>
-            <div class="tile-desc">YouTube · TikTok · IG</div>
-          </div>
+          <div class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+          <div><div class="tile-label">Download</div><div class="tile-desc">YouTube · TikTok</div></div>
         </button>
-
         <button class="home-tile" data-goto="play">
-          <div class="tile-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4"/></svg>
-          </div>
-          <div>
-            <div class="tile-label">Play</div>
-            <div class="tile-desc">Library &amp; player</div>
-          </div>
+          <div class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4"/></svg></div>
+          <div><div class="tile-label">Play</div><div class="tile-desc">Library &amp; player</div></div>
         </button>
-
         <button class="home-tile" data-goto="support">
-          <div class="tile-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          </div>
-          <div>
-            <div class="tile-label">Support</div>
-            <div class="tile-desc">FAQ &amp; contact</div>
-          </div>
+          <div class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <div><div class="tile-label">Support</div><div class="tile-desc">FAQ &amp; contact</div></div>
         </button>
-
         <button class="home-tile" data-goto="apk">
-          <div class="tile-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2.5"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
-          </div>
-          <div>
-            <div class="tile-label">Supported APK</div>
-            <div class="tile-desc">Platform &amp; device</div>
-          </div>
+          <div class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2.5"/><line x1="12" y1="18" x2="12" y2="18"/></svg></div>
+          <div><div class="tile-label">Supported APK</div><div class="tile-desc">Platform &amp; device</div></div>
         </button>
       </div>
-
       <div class="home-stats">
-        <div class="stat">
-          <div class="stat-val" id="statSongs">0</div>
-          <div class="stat-lbl">Songs</div>
-        </div>
-        <div class="stat">
-          <div class="stat-val" id="statStorage">0 MB</div>
-          <div class="stat-lbl">Storage</div>
-        </div>
-        <div class="stat">
-          <div class="stat-val" id="statPlays">0</div>
-          <div class="stat-lbl">Session</div>
-        </div>
+        <div class="stat"><div class="stat-val" id="statSongs">0</div><div class="stat-lbl">Songs</div></div>
+        <div class="stat"><div class="stat-val" id="statStorage">0 MB</div><div class="stat-lbl">Storage</div></div>
+        <div class="stat"><div class="stat-val" id="statPlays">0</div><div class="stat-lbl">Session</div></div>
       </div>
     </section>
 
-    <!-- ================= DOWNLOAD ================= -->
+    <!-- ===== DOWNLOAD ===== -->
     <section class="page" data-page="download">
       <div class="page-header">
         <h1>Download</h1>
-        <p>Tempel link dari YouTube, TikTok, atau Instagram.</p>
+        <p>Tempel link dari YouTube atau TikTok.</p>
       </div>
-
       <div class="dl-card">
         <div class="dl-input-wrap">
-          <input type="url" id="dlUrl" placeholder="Paste link here..." autocomplete="off" autocapitalize="off" spellcheck="false">
+          <input type="text" id="dlUrl" placeholder="Paste link here..." autocomplete="off" autocapitalize="off" spellcheck="false">
           <button class="btn-primary" id="dlBtn">Download</button>
         </div>
-
         <div class="dl-platforms">
           <span class="chip"><span class="dot"></span>YouTube</span>
           <span class="chip"><span class="dot"></span>TikTok</span>
-          <span class="chip"><span class="dot"></span>Instagram</span>
         </div>
-
         <div class="dl-hint">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-          <span>Audio diambil sebagai MP3 (192K) dari server web-dlp API. Bitrate asli akan ditampilkan pada tiap lagu.</span>
+          <span>TikTok via TikWM/SocialKit/TikMate · YouTube via web-dlp API. Bitrate asli ditampilkan apa adanya.</span>
         </div>
-
         <details class="api-config" id="apiConfig">
           <summary>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-            Konfigurasi API Downloader
+            Konfigurasi API YouTube (web-dlp)
           </summary>
           <input type="url" id="apiEndpoint" placeholder="https://web-dlp-api-production-1d99.up.railway.app">
           <button class="btn-ghost" id="saveApiBtn" style="width:100%">Simpan Endpoint</button>
           <div class="dl-hint" style="margin-top:8px">
-            <span>Default: <code>https://web-dlp-api-production-1d99.up.railway.app</code> — gunakan tombol di atas untuk mengganti bila perlu.</span>
+            <span>Digunakan untuk YouTube. TikTok tidak butuh konfigurasi.</span>
           </div>
         </details>
       </div>
-
       <div class="dl-card">
         <div class="section-title">Atau Import File Lokal</div>
         <p style="font-size:12px;margin-bottom:12px">Jika sudah punya file MP3/M4A di perangkat, langsung masukkan ke library.</p>
@@ -1240,7 +337,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
           Pilih File Audio
         </button>
       </div>
-
       <div class="dl-status" id="dlStatus">
         <div class="status-head">
           <div class="status-spinner" id="dlSpinner"></div>
@@ -1252,7 +348,7 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         <div class="progress-bar" id="dlProgressBar" style="display:none"><div class="progress-fill" id="dlProgressFill"></div></div>
         <div class="dl-steps" id="dlSteps">
           <div class="dl-step" data-step="check">Check</div>
-          <div class="dl-step" data-step="meta">Job</div>
+          <div class="dl-step" data-step="meta">Metadata</div>
           <div class="dl-step" data-step="download">Download</div>
           <div class="dl-step" data-step="convert">Convert</div>
           <div class="dl-step" data-step="save">Save</div>
@@ -1260,13 +356,9 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       </div>
     </section>
 
-    <!-- ================= PLAY ================= -->
+    <!-- ===== PLAY ===== -->
     <section class="page" data-page="play">
-      <div class="page-header">
-        <h1>Your Library</h1>
-        <p>Semua lagu yang sudah disimpan.</p>
-      </div>
-
+      <div class="page-header"><h1>Your Library</h1><p>Semua lagu yang sudah disimpan.</p></div>
       <div class="storage-info">
         <div>
           <div class="si-label">Storage terpakai</div>
@@ -1274,7 +366,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         </div>
         <button class="btn-ghost" id="clearLibrary" style="font-size:11px;padding:8px 10px">Clear</button>
       </div>
-
       <div class="lib-toolbar">
         <div class="search-wrap">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -1288,7 +379,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
           <option value="duration">Durasi</option>
         </select>
       </div>
-
       <div class="lib-actions">
         <button class="btn-ghost" id="shuffleBtn" data-mode="shuffle">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
@@ -1303,68 +393,50 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
           Play All
         </button>
       </div>
-
       <div class="lib-list" id="libList"></div>
     </section>
 
-    <!-- ================= SUPPORT ================= -->
+    <!-- ===== SUPPORT ===== -->
     <section class="page" data-page="support">
-      <div class="page-header">
-        <h1>Support</h1>
-        <p>Bantuan, FAQ, dan kontak.</p>
-      </div>
-
+      <div class="page-header"><h1>Support</h1><p>Bantuan, FAQ, dan kontak.</p></div>
       <div class="section-title">FAQ</div>
-      <div class="card" id="faqCard" style="padding:4px 16px">
-
+      <div class="card" style="padding:4px 16px">
         <div class="faq-item">
-          <button class="faq-q">Kenapa download tidak berhasil?
+          <button class="faq-q">Kenapa download YouTube gagal?
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
-          <div class="faq-a">Cek dulu apakah server Railway-mu aktif dengan membuka <code>https://web-dlp-api-production-1d99.up.railway.app/health</code> di browser. Jika server tidur (free tier Railway), request pertama bisa memakan 30-60 detik. Pastikan juga link YouTube valid dan tidak private/age-restricted.</div>
+          <div class="faq-a">Cek dulu server Railway-mu di browser: <code>https://web-dlp-api-production-1d99.up.railway.app/</code>. Kalau muncul status OK, server hidup. Kalau server tidur (free tier), request pertama bisa 30-60 detik. Pastikan juga link YouTube valid dan tidak private/age-restricted.</div>
         </div>
-
         <div class="faq-item">
-          <button class="faq-q">Apakah lagu saya tersimpan permanen?
+          <button class="faq-q">Bagaimana cara download TikTok?
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-a">Cukup paste link TikTok (bisa short link seperti vt.tiktok.com) ke kolom Download. Archerd otomatis mencoba 3 API: TikWM, SocialKit, lalu TikMate. Kalau satu gagal, otomatis fallback ke berikutnya. Tidak perlu konfigurasi apa pun.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Apakah lagu tersimpan permanen?
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
           <div class="faq-a">Ya. File audio dan metadata disimpan di IndexedDB pada perangkat kamu. Library akan tetap ada setelah menutup browser, selama data situs tidak dibersihkan.</div>
         </div>
-
         <div class="faq-item">
           <button class="faq-q">Apakah bisa jalan di background?
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
-          <div class="faq-a">Ya, menggunakan Media Session API. Kontrol muncul di notifikasi Android (Play/Pause/Next/Prev) selama WebView/browser mengizinkan. Di WebView Android perlu mengaktifkan mediaPlaybackRequiresUserGesture(false) dan setJavaScriptEnabled(true).</div>
+          <div class="faq-a">Ya, menggunakan Media Session API. Kontrol muncul di notifikasi Android (Play/Pause/Next/Prev) selama WebView/browser mengizinkan. Di WebView Android perlu aktifkan mediaPlaybackRequiresUserGesture(false) dan setJavaScriptEnabled(true).</div>
         </div>
-
         <div class="faq-item">
-          <button class="faq-q">Kualitas audio seperti apa?
+          <button class="faq-q">Bagaimana cara jadikan APK?
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
-          <div class="faq-a">web-dlp API mengekstrak audio pada 192 kbps MP3. Kami tidak melakukan upscaling palsu — bitrate yang ditampilkan adalah bitrate sebenarnya dari file yang tersimpan.</div>
+          <div class="faq-a">Bungkus URL Vercel ke Android WebView, atau pakai PWABuilder/Median.co untuk auto-build APK dari PWA. Lihat halaman Supported APK untuk pengaturan WebView.</div>
         </div>
-
-        <div class="faq-item">
-          <button class="faq-q">Bagaimana cara menjadikannya APK?
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="faq-a">Bungkus file HTML ini ke dalam Android WebView, aktifkan JavaScript, DOM Storage, dan MediaPlayback tanpa gesture. Bisa juga via PWA Builder atau Median.co. Lihat halaman "Supported APK".</div>
-        </div>
-
       </div>
-
       <div class="section-title" style="margin-top:20px">Contact / Report / Request</div>
       <div class="card">
         <form id="contactForm" onsubmit="return false;">
-          <div class="form-group">
-            <label for="cName">Name</label>
-            <input type="text" id="cName" placeholder="Nama kamu" required>
-          </div>
-          <div class="form-group">
-            <label for="cEmail">Email</label>
-            <input type="email" id="cEmail" placeholder="email@domain.com" required>
-          </div>
+          <div class="form-group"><label for="cName">Name</label><input type="text" id="cName" placeholder="Nama kamu" required></div>
+          <div class="form-group"><label for="cEmail">Email</label><input type="email" id="cEmail" placeholder="email@domain.com" required></div>
           <div class="form-group">
             <label for="cType">Jenis</label>
             <select id="cType" style="width:100%;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px;outline:none;background:#fff;">
@@ -1373,10 +445,7 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
               <option value="feature">Request Feature</option>
             </select>
           </div>
-          <div class="form-group">
-            <label for="cMessage">Message</label>
-            <textarea id="cMessage" placeholder="Tulis pesan kamu..." required></textarea>
-          </div>
+          <div class="form-group"><label for="cMessage">Message</label><textarea id="cMessage" placeholder="Tulis pesan kamu..." required></textarea></div>
           <button class="btn-primary" id="sendBtn" style="width:100%">SEND</button>
           <div class="dl-hint" style="margin-top:10px">
             <span>Pesan dibuka melalui aplikasi email default. Data juga disimpan lokal sebagai backup.</span>
@@ -1385,72 +454,38 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       </div>
     </section>
 
-    <!-- ================= APK ================= -->
+    <!-- ===== APK ===== -->
     <section class="page" data-page="apk">
-      <div class="page-header">
-        <h1>Supported APK</h1>
-        <p>Platform &amp; perangkat yang mendukung Archerd.</p>
-      </div>
-
+      <div class="page-header"><h1>Supported APK</h1><p>Platform &amp; perangkat yang mendukung Archerd.</p></div>
       <div class="device-card">
-        <div class="device-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2.5"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
-        </div>
-        <div class="device-info">
-          <div class="device-name">Android</div>
-          <div class="device-note">Android 6.0+ direkomendasikan</div>
-        </div>
+        <div class="device-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2.5"/><line x1="12" y1="18" x2="12" y2="18"/></svg></div>
+        <div class="device-info"><div class="device-name">Android</div><div class="device-note">Android 6.0+ direkomendasikan</div></div>
         <div class="device-status">✓ Supported</div>
       </div>
-
       <div class="device-card">
-        <div class="device-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg>
-        </div>
-        <div class="device-info">
-          <div class="device-name">Android WebView</div>
-          <div class="device-note">Aktifkan JavaScript, DOM Storage, MediaPlayback tanpa gesture</div>
-        </div>
+        <div class="device-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg></div>
+        <div class="device-info"><div class="device-name">Android WebView</div><div class="device-note">Aktifkan JavaScript, DOM Storage, MediaPlayback tanpa gesture</div></div>
         <div class="device-status">✓ Supported</div>
       </div>
-
       <div class="device-card">
-        <div class="device-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="10"/></svg>
-        </div>
-        <div class="device-info">
-          <div class="device-name">PWA</div>
-          <div class="device-note">Installable, offline shell, background playback</div>
-        </div>
+        <div class="device-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="10"/></svg></div>
+        <div class="device-info"><div class="device-name">PWA</div><div class="device-note">Installable, offline shell, background playback</div></div>
         <div class="device-status">✓ Supported</div>
       </div>
-
       <div class="device-card">
-        <div class="device-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-        </div>
-        <div class="device-info">
-          <div class="device-name">Chrome / Edge / Brave</div>
-          <div class="device-note">Chrome 73+ untuk Media Session lengkap</div>
-        </div>
+        <div class="device-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+        <div class="device-info"><div class="device-name">Chrome / Edge / Brave</div><div class="device-note">Chrome 73+ untuk Media Session lengkap</div></div>
         <div class="device-status">✓ Supported</div>
       </div>
-
       <div class="device-card">
-        <div class="device-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        </div>
-        <div class="device-info">
-          <div class="device-name">iOS Safari</div>
-          <div class="device-note">Sebagian fitur Media Session berbeda. Background playback bisa terbatas.</div>
-        </div>
+        <div class="device-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+        <div class="device-info"><div class="device-name">iOS Safari</div><div class="device-note">Sebagian fitur Media Session berbeda. Background playback bisa terbatas.</div></div>
         <div class="device-status partial">⚠ Partial</div>
       </div>
-
       <div class="card" style="margin-top:18px">
         <div class="section-title">Catatan WebView Android</div>
         <p style="font-size:13px;line-height:1.6">
-          Untuk mendapatkan pengalaman maksimal, aktifkan pada <code>WebSettings</code>:<br>
+          Untuk pengalaman maksimal, aktifkan pada <code>WebSettings</code>:<br>
           • <code>javaScriptEnabled = true</code><br>
           • <code>domStorageEnabled = true</code><br>
           • <code>mediaPlaybackRequiresUserGesture = false</code><br>
@@ -1510,16 +545,13 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       <div class="fp-title-label">Now Playing</div>
       <div style="width:40px"></div>
     </div>
-
     <div class="fp-cover-wrap">
       <img class="fp-cover" id="fpCover" alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E">
     </div>
-
     <div class="fp-info">
       <div class="fp-song-title" id="fpTitle">—</div>
       <div class="fp-artist" id="fpArtist">—</div>
     </div>
-
     <div class="fp-progress-wrap">
       <input type="range" class="fp-progress" id="fpProgress" min="0" max="1000" value="0" step="1">
       <div class="fp-times">
@@ -1527,7 +559,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         <span id="fpTotal">0:00</span>
       </div>
     </div>
-
     <div class="fp-controls">
       <button class="fp-btn" id="fpPrev" aria-label="Previous">
         <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="19 20 9 12 19 4 19 20"/><rect x="5" y="4" width="2" height="16"/></svg>
@@ -1539,7 +570,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 4 15 12 5 20 5 4"/><rect x="17" y="4" width="2" height="16"/></svg>
       </button>
     </div>
-
     <div class="fp-extra">
       <button class="fp-extra-btn" id="fpShuffle">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
@@ -1552,14 +582,12 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
     </div>
   </div>
 
-  <!-- TOAST -->
   <div class="toast-wrap" id="toastWrap"></div>
-
 </div>
 
 <script>
 /* ============================================================
-   ARCHERD JAVASCRIPT — web-dlp API Integration
+   ARCHERD JAVASCRIPT
    ============================================================ */
 (function () {
   'use strict';
@@ -1569,12 +597,11 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
     DB_VERSION: 1,
     STORE_SONGS: 'songs',
     STORE_SETTINGS: 'settings',
-    API_ENDPOINT_KEY: 'archerd_api_endpoint',
+    API_ENDPOINT_KEY: 'archerd_yt_endpoint',
     DEFAULT_API: 'https://web-dlp-api-production-1d99.up.railway.app',
     SUPPORTED_HOSTS: [
       'youtube.com', 'youtu.be', 'm.youtube.com', 'music.youtube.com',
-      'tiktok.com', 'vt.tiktok.com', 'vm.tiktok.com',
-      'instagram.com', 'www.instagram.com'
+      'tiktok.com', 'vt.tiktok.com', 'vm.tiktok.com', 'm.tiktok.com'
     ]
   };
 
@@ -1599,17 +626,14 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       return (mb / 1024).toFixed(2) + ' GB';
     },
     isValidUrl(str) {
-      try {
-        const u = new URL(str);
-        return u.protocol === 'http:' || u.protocol === 'https:';
-      } catch (e) { return false; }
+      try { const u = new URL(str); return u.protocol === 'http:' || u.protocol === 'https:'; }
+      catch (e) { return false; }
     },
     detectSource(url) {
       try {
         const host = new URL(url).hostname.replace(/^www\./, '');
         if (host.includes('youtu')) return 'YouTube';
         if (host.includes('tiktok')) return 'TikTok';
-        if (host.includes('instagram')) return 'Instagram';
         return host;
       } catch (e) { return 'Unknown'; }
     },
@@ -1677,7 +701,7 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       }, duration);
     }
     success(m) { this.show(m, 'success'); }
-    error(m) { this.show(m, 'error', 3600); }
+    error(m) { this.show(m, 'error', 4200); }
     info(m) { this.show(m, 'info'); }
   }
 
@@ -1745,10 +769,9 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
   }
 
   /* ============================================================
-     DOWNLOADER — Multi-Source
-     - YouTube → web-dlp-api (Railway)
-     - TikTok  → Multi-API fallback (TikWM → SocialKit → TikMate)
-     - Instagram → belum aktif
+     DOWNLOADER
+     TikTok: TikWM → SocialKit → TikMate (fallback)
+     YouTube: web-dlp-api
      ============================================================ */
   class Downloader {
     constructor(db, notifier) {
@@ -1756,7 +779,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       this.notifier = notifier;
       this.busy = false;
 
-      // TikTok API list — urutan dicoba dari atas
       this.tiktokApis = [
         {
           name: 'TikWM',
@@ -1825,13 +847,10 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
     validateUrl(url) {
       if (!url || !url.trim()) return { ok: false, reason: 'URL kosong.' };
       if (!Utils.isValidUrl(url)) return { ok: false, reason: 'URL tidak valid.' };
-      if (!Utils.isSupportedHost(url)) return { ok: false, reason: 'Platform belum didukung. Gunakan YouTube, TikTok, atau Instagram.' };
+      if (!Utils.isSupportedHost(url)) return { ok: false, reason: 'Platform belum didukung. Gunakan YouTube atau TikTok.' };
       return { ok: true };
     }
 
-    /**
-     * Ekstrak URL TikTok dari input bebas (komentar, teks share, dll).
-     */
     _extractTikTokUrl(input) {
       const regex = /(https?:\/\/(?:www\.|vm\.|vt\.|m\.)?tiktok\.com\/\S+)/i;
       const match = input.match(regex);
@@ -1845,29 +864,18 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         onStage && onStage('check', 'Memeriksa URL...', 'Validasi platform');
         const v = this.validateUrl(url);
         if (!v.ok) throw new Error(v.reason);
-
         const source = Utils.detectSource(url);
-
-        if (source === 'TikTok') {
-          return await this._downloadTikTok(url, onStage, onProgress);
-        } else if (source === 'YouTube') {
-          return await this._downloadYouTube(url, onStage, onProgress);
-        } else if (source === 'Instagram') {
-          return await this._downloadInstagram(url, onStage, onProgress);
-        }
+        if (source === 'TikTok') return await this._downloadTikTok(url, onStage, onProgress);
+        if (source === 'YouTube') return await this._downloadYouTube(url, onStage, onProgress);
         throw new Error('Sumber tidak didukung: ' + source);
       } finally {
         this.busy = false;
       }
     }
 
-    /* ============================================================
-       TikTok — Multi-API fallback
-       ============================================================ */
+    /* ---------------- TikTok ---------------- */
     async _downloadTikTok(url, onStage, onProgress) {
-      // Bersihkan URL dari teks tambahan
       const cleanUrl = this._extractTikTokUrl(url) || url.trim();
-
       onStage && onStage('meta', 'Mengambil metadata TikTok...', 'Mencoba beberapa API');
 
       let result = null;
@@ -1877,26 +885,16 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         const api = this.tiktokApis[i];
         try {
           if (onStage) onStage('meta', `Mencoba ${api.name}...`, `API ${i + 1} / ${this.tiktokApis.length}`);
-
           const apiUrl = api.build(cleanUrl);
           const res = await fetch(apiUrl, {
             headers: { 'Accept': 'application/json' },
             mode: 'cors',
             credentials: 'omit'
           });
-
-          if (!res.ok) {
-            errors.push(api.name + ': HTTP ' + res.status);
-            continue;
-          }
-
+          if (!res.ok) { errors.push(api.name + ': HTTP ' + res.status); continue; }
           let data;
           try { data = await res.json(); }
-          catch (e) {
-            errors.push(api.name + ': respons bukan JSON');
-            continue;
-          }
-
+          catch (e) { errors.push(api.name + ': bukan JSON'); continue; }
           const parsed = api.parser(data);
           if (parsed && parsed.audioUrl) {
             result = parsed;
@@ -1911,13 +909,9 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       }
 
       if (!result) {
-        throw new Error(
-          'Semua API TikTok gagal:\n' + errors.join('\n') +
-          '\n\nKemungkinan: link private, dihapus, atau semua API sedang down. Coba link lain.'
-        );
+        throw new Error('Semua API TikTok gagal: ' + errors.join(' | '));
       }
 
-      // Pastikan URL audio absolut
       let audioUrl = result.audioUrl;
       if (audioUrl && audioUrl.startsWith('//')) audioUrl = 'https:' + audioUrl;
       if (audioUrl && audioUrl.startsWith('/')) audioUrl = 'https://www.tikwm.com' + audioUrl;
@@ -1927,7 +921,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       if (thumb && thumb.startsWith('/')) thumb = 'https://www.tikwm.com' + thumb;
 
       onStage && onStage('download', 'Mengunduh audio TikTok...', result._apiName + ' · MP3');
-
       const { blob } = await this._fetchWithProgress(audioUrl, (p) => {
         onProgress && onProgress('download', p);
       });
@@ -1962,9 +955,7 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       return song;
     }
 
-    /* ============================================================
-       YouTube — via web-dlp-api (TIDAK BERUBAH)
-       ============================================================ */
+    /* ---------------- YouTube ---------------- */
     async _downloadYouTube(url, onStage, onProgress) {
       const base = this.getEndpoint().replace(/\/+$/, '');
 
@@ -1974,12 +965,12 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       onStage && onStage('meta', 'Memproses di server...', 'Job: ' + String(jobId).slice(0, 12));
       const meta = await this._pollYTJob(base, jobId, onStage);
 
-      onStage && onStage('download', 'Mengunduh audio...', meta.title || 'Streaming dari server');
+      onStage && onStage('download', 'Mengunduh audio...', meta.title || 'Streaming');
       const { blob } = await this._fetchWithProgress(meta.downloadUrl, (p) => {
         onProgress && onProgress('download', p);
       });
 
-      if (!blob || blob.size < 1024) throw new Error('File audio tidak valid atau terlalu kecil.');
+      if (!blob || blob.size < 1024) throw new Error('File audio tidak valid.');
 
       onStage && onStage('convert', 'Memproses audio...', 'Membaca metadata');
       const duration = (meta.duration && meta.duration > 0) ? Number(meta.duration) : await Utils.getAudioDuration(blob);
@@ -2067,17 +1058,7 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       throw new Error('Timeout menunggu server (>4 menit). Status: ' + (lastStatus || 'unknown'));
     }
 
-    /* ============================================================
-       Instagram — belum aktif
-       ============================================================ */
-    async _downloadInstagram(url, onStage, onProgress) {
-      throw new Error(
-        'Download Instagram belum diaktifkan. Butuh endpoint tambahan. ' +
-        'Sementara, gunakan link TikTok atau YouTube, atau pakai Import File Lokal.'
-      );
-    }
-
-    /* ---------------- shared helpers ---------------- */
+    /* ---------------- Shared helpers ---------------- */
     async _fetchWithProgress(url, onProgress) {
       const res = await fetch(url, { mode: 'cors', credentials: 'omit' });
       if (!res.ok) throw new Error('HTTP ' + res.status + ' saat mengunduh audio.');
@@ -2109,18 +1090,14 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       onStage && onStage('convert', 'Membaca file...', file.name);
       const duration = await Utils.getAudioDuration(file);
       const bitrate = Utils.estimateBitrate(file.size, duration);
-
       let thumbnail = null;
       try { thumbnail = await this._extractId3Cover(file); } catch (e) { thumbnail = null; }
       if (!thumbnail) thumbnail = Utils.placeholderCover(file.name);
-
       const baseName = file.name.replace(/\.[^.]+$/, '');
       const dashSplit = baseName.split(' - ');
       const artist = dashSplit.length > 1 ? dashSplit[0].trim() : 'Local File';
       const title = dashSplit.length > 1 ? dashSplit.slice(1).join(' - ').trim() : baseName;
-
       onStage && onStage('save', 'Menyimpan ke library...', title);
-
       const song = {
         id: Utils.uid(),
         title: String(title).slice(0, 200),
@@ -2245,21 +1222,17 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       this.audio = new Audio();
       this.audio.preload = 'metadata';
       this.audio.crossOrigin = 'anonymous';
-
       this.playlist = [];
       this.queue = [];
       this.currentIndex = -1;
       this.mode = 'sequential';
       this.currentObjectUrl = null;
       this.currentSong = null;
-
       this.listeners = { change: [], state: [], time: [], ended: [] };
       this._bindAudio();
     }
-
     on(evt, cb) { if (this.listeners[evt]) this.listeners[evt].push(cb); }
     emit(evt, data) { (this.listeners[evt] || []).forEach(cb => { try { cb(data); } catch (e) {} }); }
-
     _bindAudio() {
       this.audio.addEventListener('timeupdate', () => {
         this.emit('time', { current: this.audio.currentTime, duration: this.audio.duration || 0 });
@@ -2274,7 +1247,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         if (this.currentSong) this.notifier.error('Gagal memutar: ' + this.currentSong.title);
       });
     }
-
     setPlaylist(songs) {
       const currentId = this.currentSong ? this.currentSong.id : null;
       this.playlist = songs.slice();
@@ -2284,7 +1256,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         this.currentIndex = idx >= 0 ? idx : -1;
       }
     }
-
     _rebuildQueue() {
       if (this.mode === 'shuffle') {
         const ids = this.playlist.map(s => s.id);
@@ -2297,7 +1268,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         this.queue = this.playlist.map(s => s.id);
       }
     }
-
     setMode(mode) {
       this.mode = mode;
       const currentId = this.currentSong ? this.currentSong.id : null;
@@ -2307,16 +1277,13 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         this.currentIndex = idx >= 0 ? idx : -1;
       }
     }
-
     getSongById(id) { return this.playlist.find(s => s.id === id) || null; }
-
     async playSongById(id) {
       const idx = this.queue.indexOf(id);
       if (idx < 0) return;
       this.currentIndex = idx;
       await this._loadAndPlay(this.queue[idx]);
     }
-
     async _loadAndPlay(songId) {
       const song = this.getSongById(songId);
       if (!song) return;
@@ -2332,7 +1299,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       this.emit('change', song);
       try { await this.audio.play(); } catch (e) {}
     }
-
     async play() {
       if (!this.currentSong) {
         if (this.queue.length > 0) { this.currentIndex = 0; await this._loadAndPlay(this.queue[0]); }
@@ -2342,21 +1308,18 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
     }
     pause() { try { this.audio.pause(); } catch (e) {} }
     toggle() { if (this.audio.paused) this.play(); else this.pause(); }
-
     async next() {
       if (this.queue.length === 0) return;
       if (this.mode === 'repeat-one') { this.audio.currentTime = 0; await this.play(); return; }
       this.currentIndex = (this.currentIndex + 1) % this.queue.length;
       await this._loadAndPlay(this.queue[this.currentIndex]);
     }
-
     async prev() {
       if (this.queue.length === 0) return;
       if (this.audio.currentTime > 3) { this.audio.currentTime = 0; return; }
       this.currentIndex = (this.currentIndex - 1 + this.queue.length) % this.queue.length;
       await this._loadAndPlay(this.queue[this.currentIndex]);
     }
-
     seekTo(sec) { try { this.audio.currentTime = sec; } catch (e) {} }
     seekBy(delta) {
       try { this.audio.currentTime = Math.max(0, Math.min((this.audio.currentTime || 0) + delta, this.audio.duration || 0)); } catch (e) {}
@@ -2366,9 +1329,7 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       if (!isFinite(d) || d <= 0) return;
       this.audio.currentTime = (p / 100) * d;
     }
-
     isPlaying() { return !this.audio.paused && !this.audio.ended && this.audio.readyState > 2; }
-
     _onEnded() {
       this.emit('ended', this.currentSong);
       if (this.mode === 'repeat-one') { this.audio.currentTime = 0; this.play(); }
@@ -2381,14 +1342,12 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
     constructor(app) { this.app = app; this.currentPage = 'home'; }
     q(sel) { return document.querySelector(sel); }
     qa(sel) { return Array.prototype.slice.call(document.querySelectorAll(sel)); }
-
     showPage(name) {
       this.qa('.page').forEach(p => p.classList.toggle('active', p.dataset.page === name));
       this.qa('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.nav === name));
       this.currentPage = name;
       window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
     }
-
     bindNavigation() {
       this.qa('[data-nav]').forEach(btn => btn.addEventListener('click', () => this.showPage(btn.dataset.nav)));
       this.qa('[data-goto]').forEach(btn => btn.addEventListener('click', () => {
@@ -2396,11 +1355,9 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         this.qa('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.nav === btn.dataset.goto));
       }));
     }
-
     renderLibrary(songs, filter, sort) {
       const list = this.q('#libList');
       let items = songs.slice();
-
       if (filter) {
         const f = filter.toLowerCase();
         items = items.filter(s =>
@@ -2409,7 +1366,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
           (s.source || '').toLowerCase().includes(f)
         );
       }
-
       switch (sort) {
         case 'oldest': items.sort((a, b) => a.createdAt - b.createdAt); break;
         case 'title': items.sort((a, b) => (a.title || '').localeCompare(b.title || '')); break;
@@ -2417,7 +1373,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         case 'duration': items.sort((a, b) => (a.duration || 0) - (b.duration || 0)); break;
         default: items.sort((a, b) => b.createdAt - a.createdAt);
       }
-
       if (items.length === 0) {
         list.innerHTML =
           '<div class="empty-state">' +
@@ -2429,9 +1384,7 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
           '</div>';
         return;
       }
-
       const playingId = this.app.player.currentSong ? this.app.player.currentSong.id : null;
-
       list.innerHTML = items.map(song => {
         const isPlaying = song.id === playingId;
         const thumb = song.thumbnail || Utils.placeholderCover(song.title);
@@ -2459,7 +1412,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
           '</div>'
         );
       }).join('');
-
       list.querySelectorAll('.lib-item').forEach(el => {
         el.addEventListener('click', (e) => {
           if (e.target.closest('.lib-del')) return;
@@ -2474,7 +1426,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         });
       });
     }
-
     updateStats(songs) {
       const totalBytes = songs.reduce((a, s) => a + (s.size || 0), 0);
       const el1 = this.q('#statSongs');
@@ -2484,7 +1435,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       if (el2) el2.textContent = Utils.formatBytes(totalBytes);
       if (el3) el3.textContent = Utils.formatBytes(totalBytes) + ' · ' + songs.length + ' lagu';
     }
-
     updateMiniPlayer(song, playing) {
       const mini = this.q('#miniPlayer');
       const pages = this.q('#pages');
@@ -2506,14 +1456,12 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         ? '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>'
         : '<polygon points="6 4 20 12 6 20 6 4"/>';
     }
-
     updateMiniProgress(current, duration) {
       const fill = this.q('#miniProgressFill');
       if (!fill) return;
       const p = duration > 0 ? (current / duration) * 100 : 0;
       fill.style.width = Math.max(0, Math.min(100, p)) + '%';
     }
-
     updateFullPlayer(song, playing) {
       if (!song) return;
       this.q('#fpCover').src = song.thumbnail || Utils.placeholderCover(song.title);
@@ -2525,7 +1473,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         : '<polygon points="6 4 20 12 6 20 6 4"/>';
       this.q('#fullPlayer').classList.toggle('playing', playing);
     }
-
     updateFullProgress(current, duration) {
       const range = this.q('#fpProgress');
       const cur = this.q('#fpCurrent');
@@ -2536,7 +1483,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       cur.textContent = Utils.formatTime(current);
       tot.textContent = Utils.formatTime(duration || 0);
     }
-
     updateModeButtons(mode) {
       const shuf = this.q('#shuffleBtn');
       const rep = this.q('#repeatBtn');
@@ -2552,23 +1498,18 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       }
       if (fpRep) fpRep.classList.toggle('active', mode === 'repeat-one');
     }
-
     showDownloadStatus(show) { this.q('#dlStatus').classList.toggle('show', !!show); }
-
     updateDownloadStatus(stage, text, sub, progress) {
       const spinner = this.q('#dlSpinner');
       const statusText = this.q('#dlStatusText');
       const statusSub = this.q('#dlStatusSub');
       const bar = this.q('#dlProgressBar');
       const fill = this.q('#dlProgressFill');
-
       spinner.classList.remove('done', 'error');
       if (stage === 'done') spinner.classList.add('done');
       if (stage === 'error') spinner.classList.add('error');
-
       statusText.textContent = text || '';
       statusSub.textContent = sub || '';
-
       if (stage === 'download') {
         bar.style.display = 'block';
         fill.style.width = ((progress || 0) * 100).toFixed(1) + '%';
@@ -2578,7 +1519,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       } else {
         bar.style.display = 'none';
       }
-
       const order = ['check', 'meta', 'download', 'convert', 'save'];
       const activeIdx = order.indexOf(stage);
       this.qa('.dl-step').forEach(step => {
@@ -2621,25 +1561,20 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       this.searchFilter = '';
       this.sortMode = 'newest';
     }
-
     async init() {
       try { await this.db.init(); }
       catch (e) { this.notifier.error('Gagal membuka database: ' + e.message); return; }
-
       StorageManager.persist();
       this.songs = await this.db.getSongs();
       this.refreshLibrary();
       this.ui.updateStats(this.songs);
-
       this.ui.bindNavigation();
       this.router.start();
-
       this._bindDownloadUI();
       this._bindLibraryUI();
       this._bindPlayerUI();
       this._bindSupportUI();
       this._bindKeyboard();
-
       this.player.on('change', (song) => {
         this.ui.updateMiniPlayer(song, this.player.isPlaying());
         this.ui.updateFullPlayer(song, this.player.isPlaying());
@@ -2658,20 +1593,15 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         this.mediaSession.setPositionState(t.duration, t.current, this.player.audio.playbackRate || 1);
       });
       this.player.on('ended', () => {});
-
       this.mediaSession.setHandlers();
       this.player.setMode('sequential');
       this.ui.updateModeButtons('sequential');
-
       this._setupPWA();
-      document.body.classList.add('ready');
     }
-
     refreshLibrary() {
       this.ui.renderLibrary(this.songs, this.searchFilter, this.sortMode);
       this.ui.updateStats(this.songs);
     }
-
     _bindDownloadUI() {
       const urlInput = document.getElementById('dlUrl');
       const dlBtn = document.getElementById('dlBtn');
@@ -2679,17 +1609,14 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       const importFile = document.getElementById('importFile');
       const apiEndpointInput = document.getElementById('apiEndpoint');
       const saveApiBtn = document.getElementById('saveApiBtn');
-
       const saved = this.downloader.getEndpoint();
       if (saved && saved !== CONFIG.DEFAULT_API) apiEndpointInput.value = saved;
-
       saveApiBtn.addEventListener('click', () => {
         const v = apiEndpointInput.value.trim();
         if (v && !/^https?:\/\//i.test(v)) { this.notifier.error('Endpoint harus diawali http:// atau https://'); return; }
         this.downloader.setEndpoint(v || CONFIG.DEFAULT_API);
         this.notifier.success(v ? 'Endpoint disimpan.' : 'Endpoint default dipakai.');
       });
-
       dlBtn.addEventListener('click', async () => {
         const url = urlInput.value.trim();
         if (!url) { this.notifier.error('Tempel link terlebih dahulu.'); return; }
@@ -2715,7 +1642,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
           dlBtn.disabled = false;
         }
       });
-
       importBtn.addEventListener('click', () => importFile.click());
       importFile.addEventListener('change', async (e) => {
         const file = e.target.files && e.target.files[0];
@@ -2737,7 +1663,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         }
       });
     }
-
     _bindLibraryUI() {
       const search = document.getElementById('searchInput');
       const sort = document.getElementById('sortSelect');
@@ -2745,7 +1670,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       const shuffleBtn = document.getElementById('shuffleBtn');
       const repeatBtn = document.getElementById('repeatBtn');
       const playAllBtn = document.getElementById('playAllBtn');
-
       search.addEventListener('input', () => { this.searchFilter = search.value; this.refreshLibrary(); });
       sort.addEventListener('change', () => { this.sortMode = sort.value; this.refreshLibrary(); });
       clearBtn.addEventListener('click', async () => {
@@ -2762,14 +1686,12 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
           this.notifier.success('Library dikosongkan.');
         } catch (e) { this.notifier.error('Gagal mengosongkan library.'); }
       });
-
       shuffleBtn.addEventListener('click', () => {
         const newMode = this.player.mode === 'shuffle' ? 'sequential' : 'shuffle';
         this.player.setMode(newMode);
         this.ui.updateModeButtons(newMode);
         this.notifier.info(newMode === 'shuffle' ? 'Mode: Shuffle' : 'Mode: Sequential');
       });
-
       repeatBtn.addEventListener('click', () => {
         const order = ['sequential', 'repeat-one'];
         const next = order[(order.indexOf(this.player.mode) + 1) % order.length];
@@ -2777,7 +1699,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         this.ui.updateModeButtons(next);
         this.notifier.info(next === 'repeat-one' ? 'Mode: Repeat One' : 'Mode: Sequential');
       });
-
       playAllBtn.addEventListener('click', async () => {
         if (this.songs.length === 0) { this.notifier.info('Belum ada lagu.'); return; }
         this.player.setPlaylist(this.songs);
@@ -2786,14 +1707,12 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         this.openFullPlayer();
       });
     }
-
     _bindPlayerUI() {
       document.getElementById('miniPlay').addEventListener('click', () => this.player.toggle());
       document.getElementById('miniPrev').addEventListener('click', () => this.player.prev());
       document.getElementById('miniNext').addEventListener('click', () => this.player.next());
       document.getElementById('miniInfo').addEventListener('click', () => this.openFullPlayer());
       document.getElementById('miniThumb').addEventListener('click', () => this.openFullPlayer());
-
       const fpClose = document.getElementById('fpClose');
       const fpPlay = document.getElementById('fpPlay');
       const fpPrev = document.getElementById('fpPrev');
@@ -2801,19 +1720,16 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       const fpProgress = document.getElementById('fpProgress');
       const fpShuffle = document.getElementById('fpShuffle');
       const fpRepeat = document.getElementById('fpRepeat');
-
       fpClose.addEventListener('click', () => this.closeFullPlayer());
       fpPlay.addEventListener('click', () => this.player.toggle());
       fpPrev.addEventListener('click', () => this.player.prev());
       fpNext.addEventListener('click', () => this.player.next());
-
       fpProgress.addEventListener('input', () => {
         const p = parseFloat(fpProgress.value) / 1000;
         const d = this.player.audio.duration;
         if (isFinite(d) && d > 0) document.getElementById('fpCurrent').textContent = Utils.formatTime(p * d);
       });
       fpProgress.addEventListener('change', () => { this.player.seekPercent(parseFloat(fpProgress.value) / 10); });
-
       fpShuffle.addEventListener('click', () => {
         const newMode = this.player.mode === 'shuffle' ? 'sequential' : 'shuffle';
         this.player.setMode(newMode);
@@ -2825,7 +1741,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         this.player.setMode(next);
         this.ui.updateModeButtons(next);
       });
-
       let startY = 0, dragging = false;
       const fp = document.getElementById('fullPlayer');
       fp.addEventListener('touchstart', (e) => {
@@ -2846,7 +1761,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         if (dy > 100) this.closeFullPlayer();
       });
     }
-
     openFullPlayer() {
       document.getElementById('fullPlayer').classList.add('open');
       document.getElementById('toastWrap').classList.add('player-open');
@@ -2859,7 +1773,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       document.getElementById('toastWrap').classList.remove('player-open');
       document.body.style.overflow = '';
     }
-
     async deleteSong(id) {
       const song = this.songs.find(s => s.id === id);
       if (!song) return;
@@ -2880,7 +1793,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         this.notifier.success('Lagu dihapus.');
       } catch (e) { this.notifier.error('Gagal menghapus lagu.'); }
     }
-
     _bindSupportUI() {
       document.querySelectorAll('.faq-q').forEach(q => {
         q.addEventListener('click', () => {
@@ -2890,35 +1802,29 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
           if (!wasOpen) item.classList.add('open');
         });
       });
-
       const sendBtn = document.getElementById('sendBtn');
       sendBtn.addEventListener('click', () => {
         const name = document.getElementById('cName').value.trim();
         const email = document.getElementById('cEmail').value.trim();
         const type = document.getElementById('cType').value;
         const message = document.getElementById('cMessage').value.trim();
-
         if (!name || !email || !message) { this.notifier.error('Mohon lengkapi semua field.'); return; }
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { this.notifier.error('Format email tidak valid.'); return; }
-
         const payload = { name, email, type, message, ts: Date.now() };
         try {
           const drafts = JSON.parse(localStorage.getItem('archerd_contact_drafts') || '[]');
           drafts.push(payload);
           localStorage.setItem('archerd_contact_drafts', JSON.stringify(drafts.slice(-50)));
         } catch (e) {}
-
         const subject = encodeURIComponent('[Archerd][' + type + '] dari ' + name);
         const body = encodeURIComponent(message + '\n\n— ' + name + ' (' + email + ')');
         window.location.href = 'mailto:support@archerd.app?subject=' + subject + '&body=' + body;
-
         this.notifier.success('Membuka aplikasi email... Terima kasih, ' + name + '!');
         document.getElementById('cName').value = '';
         document.getElementById('cEmail').value = '';
         document.getElementById('cMessage').value = '';
       });
     }
-
     _bindKeyboard() {
       document.addEventListener('keydown', (e) => {
         if (e.target.matches('input, textarea, select')) return;
@@ -2928,45 +1834,9 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         else if (e.code === 'Escape') this.closeFullPlayer();
       });
     }
-
     _setupPWA() {
-      try {
-        const icon = Utils.placeholderCover('A');
-        const manifest = {
-          name: 'Archerd',
-          short_name: 'Archerd',
-          description: 'Music downloader & player. Music made simple.',
-          start_url: '.',
-          display: 'standalone',
-          orientation: 'portrait',
-          background_color: '#FFFFFF',
-          theme_color: '#6C5CE7',
-          icons: [
-            { src: icon, sizes: '192x192', type: 'image/svg+xml', purpose: 'any' },
-            { src: icon, sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable' }
-          ]
-        };
-        const blob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
-        document.getElementById('manifest-link').href = URL.createObjectURL(blob);
-      } catch (e) {}
-
       if ('serviceWorker' in navigator) {
-        const swCode =
-          "const CACHE='archerd-v1';" +
-          "self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./'])))});" +
-          "self.addEventListener('activate',e=>{e.waitUntil(self.clients.claim())});" +
-          "self.addEventListener('fetch',e=>{" +
-          "  if(e.request.method!=='GET')return;" +
-          "  e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{" +
-          "    if(res.ok && e.request.url.startsWith(self.location.origin)){" +
-          "      const clone=res.clone();caches.open(CACHE).then(c=>c.put(e.request,clone));" +
-          "    }return res;" +
-          "  }).catch(()=>caches.match('./'))))" +
-          "});";
-        try {
-          const swBlob = new Blob([swCode], { type: 'application/javascript' });
-          navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
-        } catch (e) {}
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
       }
     }
   }
