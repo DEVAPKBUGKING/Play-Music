@@ -411,7 +411,7 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
           <button class="faq-q">Bagaimana cara download TikTok?
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
-          <div class="faq-a">Cukup paste link TikTok (bisa short link seperti vt.tiktok.com) ke kolom Download. Archerd otomatis mencoba 3 API: TikWM, SocialKit, lalu TikMate. Kalau satu gagal, otomatis fallback ke berikutnya. Tidak perlu konfigurasi apa pun.</div>
+          <div class="faq-a">Cukup paste link TikTok (bisa short link seperti vt.tiktok.com) ke kolom Download. Archerd otomatis mencoba 3 API: TikWM, SocialKit, lalu TikMate. Archerd memprioritaskan full audio track, kalau tidak ada pakai video MP4 (audio-nya utuh sesuai durasi video).</div>
         </div>
         <div class="faq-item">
           <button class="faq-q">Apakah lagu tersimpan permanen?
@@ -674,7 +674,7 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         };
         audio.onloadedmetadata = () => finish(audio.duration);
         audio.onerror = () => finish(0);
-        setTimeout(() => finish(0), 8000);
+        setTimeout(() => finish(0), 10000);
         audio.src = url;
       });
     },
@@ -701,7 +701,7 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       }, duration);
     }
     success(m) { this.show(m, 'success'); }
-    error(m) { this.show(m, 'error', 4200); }
+    error(m) { this.show(m, 'error', 4600); }
     info(m) { this.show(m, 'info'); }
   }
 
@@ -770,7 +770,7 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
 
   /* ============================================================
      DOWNLOADER
-     TikTok: TikWM → SocialKit → TikMate (fallback)
+     TikTok: prioritize full audio track > video MP4 (audio utuh)
      YouTube: web-dlp-api
      ============================================================ */
   class Downloader {
@@ -786,12 +786,17 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
           parser: (data) => {
             if (data && data.code === 0 && data.data) {
               const d = data.data;
+              const mi = d.music_info || {};
               return {
-                title: d.title || 'TikTok Video',
-                artist: (d.author && (d.author.nickname || d.author.unique_id)) || 'TikTok',
+                title: (mi.title && mi.title.trim()) || d.title || 'TikTok Video',
+                artist: (d.author && (d.author.nickname || d.author.unique_id)) || mi.author || 'TikTok',
                 thumbnail: d.cover || d.origin_cover || '',
                 duration: d.duration || 0,
-                audioUrl: d.music || ''
+                musicInfoPlay: mi.play || null,
+                musicInfoDuration: mi.duration || 0,
+                hdplay: d.hdplay || null,
+                play: d.play || null,
+                musicUrl: d.music || null
               };
             }
             return null;
@@ -802,13 +807,17 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
           build: (url) => 'https://api.socialkit.dev/tiktok?url=' + encodeURIComponent(url),
           parser: (data) => {
             const d = data && (data.data || data);
-            if (d && (d.audio || d.music)) {
+            if (d && (d.audio || d.music || d.video || d.videoUrl)) {
               return {
                 title: d.title || 'TikTok Video',
                 artist: d.author || d.username || 'TikTok',
                 thumbnail: d.thumbnail || d.cover || '',
                 duration: d.duration || 0,
-                audioUrl: d.audio || d.music || ''
+                musicInfoPlay: d.audio || d.music || null,
+                musicInfoDuration: 0,
+                hdplay: null,
+                play: d.video || d.videoUrl || null,
+                musicUrl: null
               };
             }
             return null;
@@ -824,7 +833,11 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
                 artist: data.author || 'TikTok',
                 thumbnail: data.thumbnail || data.cover || '',
                 duration: data.duration || 0,
-                audioUrl: data.audio_url || data.music_url || ''
+                musicInfoPlay: data.audio_url || data.music_url || null,
+                musicInfoDuration: 0,
+                hdplay: data.video_url || null,
+                play: data.video_url || null,
+                musicUrl: null
               };
             }
             return null;
@@ -896,12 +909,12 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
           try { data = await res.json(); }
           catch (e) { errors.push(api.name + ': bukan JSON'); continue; }
           const parsed = api.parser(data);
-          if (parsed && parsed.audioUrl) {
+          if (parsed) {
             result = parsed;
             result._apiName = api.name;
             break;
           } else {
-            errors.push(api.name + ': tidak ada audio URL');
+            errors.push(api.name + ': response tidak valid');
           }
         } catch (err) {
           errors.push(api.name + ': ' + (err.message || 'error'));
@@ -912,24 +925,57 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         throw new Error('Semua API TikTok gagal: ' + errors.join(' | '));
       }
 
-      let audioUrl = result.audioUrl;
-      if (audioUrl && audioUrl.startsWith('//')) audioUrl = 'https:' + audioUrl;
-      if (audioUrl && audioUrl.startsWith('/')) audioUrl = 'https://www.tikwm.com' + audioUrl;
+      // Prioritas URL:
+      // 1. music_info.play (full audio track, durasi penuh)
+      // 2. hdplay / play (video MP4 — HTML5 audio bisa mainkan audio track-nya, durasi penuh)
+      // 3. music (audio dari video, tapi TikTok biasanya cuma klip 1 menit)
+      const candidates = [];
+      if (result.musicInfoPlay) {
+        candidates.push({
+          label: 'full-track',
+          url: result.musicInfoPlay,
+          isFull: result.musicInfoDuration > 0 && result.duration > 0
+            ? Math.abs(result.musicInfoDuration - result.duration) <= 3
+            : false
+        });
+      }
+      if (result.hdplay) candidates.push({ label: 'video-hd', url: result.hdplay, isFull: true });
+      if (result.play) candidates.push({ label: 'video-sd', url: result.play, isFull: true });
+      if (result.musicUrl) candidates.push({ label: 'music-clip', url: result.musicUrl, isFull: false });
+
+      if (candidates.length === 0) throw new Error('TikTok tidak mengembalikan URL media.');
+
+      // Pilih kandidat: yang isFull=true diprioritaskan
+      candidates.sort((a, b) => (b.isFull ? 1 : 0) - (a.isFull ? 1 : 0));
+      const chosen = candidates[0];
+
+      let audioUrl = chosen.url;
+      if (audioUrl.startsWith('//')) audioUrl = 'https:' + audioUrl;
+      if (audioUrl.startsWith('/')) audioUrl = 'https://www.tikwm.com' + audioUrl;
 
       let thumb = result.thumbnail || '';
-      if (thumb && thumb.startsWith('//')) thumb = 'https:' + thumb;
-      if (thumb && thumb.startsWith('/')) thumb = 'https://www.tikwm.com' + thumb;
+      if (thumb.startsWith('//')) thumb = 'https:' + thumb;
+      if (thumb.startsWith('/')) thumb = 'https://www.tikwm.com' + thumb;
 
-      onStage && onStage('download', 'Mengunduh audio TikTok...', result._apiName + ' · MP3');
-      const { blob } = await this._fetchWithProgress(audioUrl, (p) => {
+      onStage && onStage('download', 'Mengunduh audio TikTok...', result._apiName + ' · ' + chosen.label);
+
+      const { blob, contentType } = await this._fetchWithProgress(audioUrl, (p) => {
         onProgress && onProgress('download', p);
       });
 
       if (!blob || blob.size < 512) throw new Error('File audio TikTok tidak valid.');
 
       onStage && onStage('convert', 'Memproses audio...', 'Membaca metadata');
-      const duration = (result.duration && result.duration > 0) ? Number(result.duration) : await Utils.getAudioDuration(blob);
+      const audioDuration = await Utils.getAudioDuration(blob);
+      const expectedDuration = (result.duration && result.duration > 0) ? Number(result.duration) : 0;
+      // Pakai durasi aktual file sebagai kebenaran utama
+      const duration = audioDuration > 0 ? audioDuration : expectedDuration;
       const bitrate = Utils.estimateBitrate(blob.size, duration);
+
+      // Cek: kalau file jauh lebih pendek dari yang diharapkan, laporkan
+      if (expectedDuration > 30 && audioDuration > 0 && audioDuration < expectedDuration * 0.7) {
+        console.warn('[Archerd] Durasi file (' + Math.round(audioDuration) + 's) < durasi video (' + expectedDuration + 's). Ini klip pendek.');
+      }
 
       onStage && onStage('save', 'Menyimpan ke library...', 'Menulis ke IndexedDB');
 
@@ -951,7 +997,7 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       };
 
       await this.db.addSong(song);
-      onStage && onStage('done', 'Selesai!', song.title);
+      onStage && onStage('done', 'Selesai!', song.title + ' · ' + Utils.formatTime(duration));
       return song;
     }
 
@@ -973,7 +1019,8 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       if (!blob || blob.size < 1024) throw new Error('File audio tidak valid.');
 
       onStage && onStage('convert', 'Memproses audio...', 'Membaca metadata');
-      const duration = (meta.duration && meta.duration > 0) ? Number(meta.duration) : await Utils.getAudioDuration(blob);
+      const audioDuration = await Utils.getAudioDuration(blob);
+      const duration = (meta.duration && meta.duration > 0) ? Number(meta.duration) : audioDuration;
       const bitrate = meta.bitrate ? Number(meta.bitrate) : Utils.estimateBitrate(blob.size, duration);
 
       onStage && onStage('save', 'Menyimpan ke library...', 'Menulis ke IndexedDB');
@@ -1058,30 +1105,73 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       throw new Error('Timeout menunggu server (>4 menit). Status: ' + (lastStatus || 'unknown'));
     }
 
-    /* ---------------- Shared helpers ---------------- */
+    /* ---------------- Fetch dengan validasi & retry ---------------- */
     async _fetchWithProgress(url, onProgress) {
       const res = await fetch(url, { mode: 'cors', credentials: 'omit' });
       if (!res.ok) throw new Error('HTTP ' + res.status + ' saat mengunduh audio.');
+
+      const contentType = (res.headers.get('content-type') || 'audio/mpeg').toLowerCase();
+
+      // Validasi: kalau server balas HTML/JSON, berarti file expired atau error
+      if (contentType.includes('text/html') || contentType.includes('application/json')) {
+        throw new Error(
+          'Server mengembalikan ' + contentType + ' — bukan audio. ' +
+          'File mungkin sudah expired atau server sedang error. Coba ulangi.'
+        );
+      }
+
       const total = parseInt(res.headers.get('content-length') || '0', 10) || 0;
-      const contentType = res.headers.get('content-type') || 'audio/mpeg';
+
       if (!res.body || !res.body.getReader) {
         const blob = await res.blob();
         if (onProgress) onProgress(1);
         return { blob, contentType };
       }
+
       const reader = res.body.getReader();
       const chunks = [];
       let received = 0;
+
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
         chunks.push(value);
         received += value.length;
-        if (onProgress) onProgress(total ? received / total : 0);
+        if (onProgress) onProgress(total ? received / total : 0.3);
       }
-      return { blob: new Blob(chunks, { type: contentType }), contentType };
+
+      let blob = new Blob(chunks, { type: contentType });
+
+      // Kalau content-length ada tapi file belum lengkap → coba ulang
+      if (total > 0 && blob.size < total * 0.98) {
+        console.warn('[Archerd] Download partial: ' + blob.size + ' / ' + total + ' bytes. Retry...');
+        if (onProgress) onProgress(0.5);
+        try {
+          const retry = await fetch(url, { mode: 'cors', credentials: 'omit' });
+          if (retry.ok) {
+            const retryType = (retry.headers.get('content-type') || '').toLowerCase();
+            if (!retryType.includes('text/html') && !retryType.includes('application/json')) {
+              const fullBlob = await retry.blob();
+              if (fullBlob.size > blob.size) {
+                blob = fullBlob;
+                console.log('[Archerd] Retry berhasil: ' + fullBlob.size + ' bytes.');
+              }
+            }
+          }
+        } catch (e) {
+          console.warn('[Archerd] Retry gagal:', e);
+        }
+        if (onProgress) onProgress(1);
+      }
+
+      if (total > 0 && blob.size < total * 0.98) {
+        console.warn('[Archerd] File tetap tidak lengkap: ' + blob.size + ' / ' + total);
+      }
+
+      return { blob, contentType };
     }
 
+    /* ---------------- Import file lokal ---------------- */
     async importFile(file, onStage) {
       if (!file) throw new Error('Tidak ada file.');
       if (!file.type.startsWith('audio/') && !/\.(mp3|m4a|aac|wav|ogg|opus|flac)$/i.test(file.name)) {
@@ -1279,7 +1369,12 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
     }
     getSongById(id) { return this.playlist.find(s => s.id === id) || null; }
     async playSongById(id) {
-      const idx = this.queue.indexOf(id);
+      let idx = this.queue.indexOf(id);
+      if (idx < 0) {
+        // Fallback: rebuild queue kalau belum sinkron
+        this._rebuildQueue();
+        idx = this.queue.indexOf(id);
+      }
       if (idx < 0) return;
       this.currentIndex = idx;
       await this._loadAndPlay(this.queue[idx]);
@@ -1599,6 +1694,12 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       this._setupPWA();
     }
     refreshLibrary() {
+      // FIX: sinkronkan queue player dengan library
+      const ids = this.songs.map(s => s.id).join(',');
+      const qids = this.player.playlist.map(s => s.id).join(',');
+      if (ids !== qids) {
+        this.player.setPlaylist(this.songs);
+      }
       this.ui.renderLibrary(this.songs, this.searchFilter, this.sortMode);
       this.ui.updateStats(this.songs);
     }
