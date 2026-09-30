@@ -1,8 +1,4 @@
-/* ============================================================
-   Archerd Service Worker
-   Cache shell, network-first untuk API, cache-first untuk assets
-   ============================================================ */
-
+/* Archerd Service Worker */
 const CACHE_NAME = 'archerd-v1';
 const SHELL_FILES = ['./', './index.html', './manifest.json'];
 
@@ -27,19 +23,10 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   const req = event.request;
-
-  // Hanya handle GET
   if (req.method !== 'GET') return;
-
   const url = new URL(req.url);
+  if (url.origin !== self.location.origin) return;
 
-  // Jangan cache request ke API eksternal
-  if (url.origin !== self.location.origin) {
-    // Untuk API, biarkan lewat network langsung
-    return;
-  }
-
-  // Untuk navigasi HTML → network-first, fallback ke cache
   if (req.mode === 'navigate' || (req.headers.get('accept') || '').includes('text/html')) {
     event.respondWith(
       fetch(req)
@@ -53,7 +40,6 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Static assets → cache-first
   event.respondWith(
     caches.match(req).then((cached) => {
       if (cached) return cached;
@@ -68,7 +54,6 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Terima pesan skip-waiting dari halaman
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
