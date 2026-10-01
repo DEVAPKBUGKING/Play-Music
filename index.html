@@ -245,6 +245,50 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
 .device-status { font-size: 11px; font-weight: 800; color: var(--success); background: rgba(18,184,134,0.12); padding: 5px 9px; border-radius: 999px; letter-spacing: .04em; flex-shrink: 0; }
 .device-status.partial { color: var(--warn); background: rgba(245,159,0,0.12); }
 
+/* --- Discover link on Home --- */
+.discover-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #6C5CE7 0%, #4834D4 100%);
+  border: none;
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  color: #fff;
+  text-align: left;
+  width: 100%;
+  margin-top: 14px;
+  transition: transform .15s ease, box-shadow .25s ease;
+  box-shadow: 0 8px 24px rgba(108,92,231,0.35);
+  cursor: pointer;
+}
+.discover-link:active { transform: scale(.98); }
+.discover-link:hover { box-shadow: 0 12px 32px rgba(108,92,231,0.45); }
+.discover-link .d-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.discover-link .d-icon svg { width: 22px; height: 22px; }
+.discover-link .d-info { flex: 1; min-width: 0; }
+.discover-link .d-title { font-size: 15px; font-weight: 800; letter-spacing: -0.01em; }
+.discover-link .d-sub { font-size: 12px; opacity: .82; margin-top: 2px; }
+.discover-link .d-arrow {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.discover-link .d-arrow svg { width: 16px; height: 16px; }
+
 @media (min-width: 640px) {
   .page { max-width: 640px; margin: 0 auto; padding-left: 28px; padding-right: 28px; }
   .hero-title { font-size: 42px; }
@@ -271,6 +315,24 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         <div class="hero-badge">ARCHERD</div>
         <h1 class="hero-title">Welcome to Archerd</h1>
         <p class="hero-sub">Music downloader &amp; player. Music made simple — download, simpan, dan putar tanpa ribet.</p>
+
+        <div class="dl-input-wrap" style="margin-top:18px">
+          <input type="text" id="homeSearchInput" placeholder="Cari lagu, artist..." autocomplete="off" spellcheck="false">
+          <button class="btn-primary" id="homeSearchBtn">Cari</button>
+        </div>
+
+        <button class="discover-link" id="openDiscoverBtn" type="button">
+          <div class="d-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
+          <div class="d-info">
+            <div class="d-title">Archerd Discover</div>
+            <div class="d-sub">Cari lagu dari seluruh dunia</div>
+          </div>
+          <div class="d-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </button>
       </div>
       <div class="home-grid">
         <button class="home-tile" data-goto="download">
@@ -412,6 +474,12 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
           <div class="faq-a">Cukup paste link TikTok (bisa short link seperti vt.tiktok.com) ke kolom Download. Archerd otomatis mencoba 3 API: TikWM, SocialKit, lalu TikMate. Archerd memprioritaskan full audio track, kalau tidak ada pakai video MP4 (audio-nya utuh sesuai durasi video).</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Apa itu Archerd Discover?
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-a">Discover adalah tab terpisah untuk mencari lagu dari seluruh dunia. Ketuk tombol Discover di Home atau ketik kata kunci di search bar Home untuk membuka Discover. Setelah menemukan lagu, kau bisa mengambil link-nya dan mengirim ke Download di Archerd.</div>
         </div>
         <div class="faq-item">
           <button class="faq-q">Apakah lagu tersimpan permanen?
@@ -599,6 +667,7 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
     STORE_SETTINGS: 'settings',
     API_ENDPOINT_KEY: 'archerd_yt_endpoint',
     DEFAULT_API: 'https://web-dlp-api-production-1d99.up.railway.app',
+    DISCOVER_URL: 'https://discover-arched-playusic.vercel.app/discover.html',
     SUPPORTED_HOSTS: [
       'youtube.com', 'youtu.be', 'm.youtube.com', 'music.youtube.com',
       'tiktok.com', 'vt.tiktok.com', 'vm.tiktok.com', 'm.tiktok.com'
@@ -925,10 +994,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
         throw new Error('Semua API TikTok gagal: ' + errors.join(' | '));
       }
 
-      // Prioritas URL:
-      // 1. music_info.play (full audio track, durasi penuh)
-      // 2. hdplay / play (video MP4 — HTML5 audio bisa mainkan audio track-nya, durasi penuh)
-      // 3. music (audio dari video, tapi TikTok biasanya cuma klip 1 menit)
       const candidates = [];
       if (result.musicInfoPlay) {
         candidates.push({
@@ -945,7 +1010,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
 
       if (candidates.length === 0) throw new Error('TikTok tidak mengembalikan URL media.');
 
-      // Pilih kandidat: yang isFull=true diprioritaskan
       candidates.sort((a, b) => (b.isFull ? 1 : 0) - (a.isFull ? 1 : 0));
       const chosen = candidates[0];
 
@@ -959,7 +1023,7 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
 
       onStage && onStage('download', 'Mengunduh audio TikTok...', result._apiName + ' · ' + chosen.label);
 
-      const { blob, contentType } = await this._fetchWithProgress(audioUrl, (p) => {
+      const { blob } = await this._fetchWithProgress(audioUrl, (p) => {
         onProgress && onProgress('download', p);
       });
 
@@ -968,13 +1032,11 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       onStage && onStage('convert', 'Memproses audio...', 'Membaca metadata');
       const audioDuration = await Utils.getAudioDuration(blob);
       const expectedDuration = (result.duration && result.duration > 0) ? Number(result.duration) : 0;
-      // Pakai durasi aktual file sebagai kebenaran utama
       const duration = audioDuration > 0 ? audioDuration : expectedDuration;
       const bitrate = Utils.estimateBitrate(blob.size, duration);
 
-      // Cek: kalau file jauh lebih pendek dari yang diharapkan, laporkan
       if (expectedDuration > 30 && audioDuration > 0 && audioDuration < expectedDuration * 0.7) {
-        console.warn('[Archerd] Durasi file (' + Math.round(audioDuration) + 's) < durasi video (' + expectedDuration + 's). Ini klip pendek.');
+        console.warn('[Archerd] Durasi file (' + Math.round(audioDuration) + 's) < durasi video (' + expectedDuration + 's).');
       }
 
       onStage && onStage('save', 'Menyimpan ke library...', 'Menulis ke IndexedDB');
@@ -1112,7 +1174,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
 
       const contentType = (res.headers.get('content-type') || 'audio/mpeg').toLowerCase();
 
-      // Validasi: kalau server balas HTML/JSON, berarti file expired atau error
       if (contentType.includes('text/html') || contentType.includes('application/json')) {
         throw new Error(
           'Server mengembalikan ' + contentType + ' — bukan audio. ' +
@@ -1142,7 +1203,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
 
       let blob = new Blob(chunks, { type: contentType });
 
-      // Kalau content-length ada tapi file belum lengkap → coba ulang
       if (total > 0 && blob.size < total * 0.98) {
         console.warn('[Archerd] Download partial: ' + blob.size + ' / ' + total + ' bytes. Retry...');
         if (onProgress) onProgress(0.5);
@@ -1371,7 +1431,6 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
     async playSongById(id) {
       let idx = this.queue.indexOf(id);
       if (idx < 0) {
-        // Fallback: rebuild queue kalau belum sinkron
         this._rebuildQueue();
         idx = this.queue.indexOf(id);
       }
@@ -1692,9 +1751,9 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       this.player.setMode('sequential');
       this.ui.updateModeButtons('sequential');
       this._setupPWA();
+      this._handleDeepLink();
     }
     refreshLibrary() {
-      // FIX: sinkronkan queue player dengan library
       const ids = this.songs.map(s => s.id).join(',');
       const qids = this.player.playlist.map(s => s.id).join(',');
       if (ids !== qids) {
@@ -1702,6 +1761,35 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
       }
       this.ui.renderLibrary(this.songs, this.searchFilter, this.sortMode);
       this.ui.updateStats(this.songs);
+    }
+    _handleDeepLink() {
+      try {
+        const params = new URLSearchParams(location.search);
+        const url = params.get('url');
+        const goto = params.get('goto');
+
+        if (url && /^https?:\/\//i.test(url)) {
+          const dlInput = document.getElementById('dlUrl');
+          if (dlInput) {
+            dlInput.value = url;
+            this.notifier.success('Link dari Discover siap di-download.');
+          }
+          this.ui.showPage('download');
+          this.ui.qa('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.nav === 'download'));
+          try {
+            const clean = location.pathname + location.hash.replace('#download', '');
+            history.replaceState(null, '', clean);
+          } catch (e) {}
+          return;
+        }
+
+        if (goto && ['home', 'download', 'play', 'support', 'apk'].indexOf(goto) >= 0) {
+          this.ui.showPage(goto);
+          this.ui.qa('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.nav === goto));
+        }
+      } catch (e) {
+        console.warn('[Archerd] Deep link error:', e);
+      }
     }
     _bindDownloadUI() {
       const urlInput = document.getElementById('dlUrl');
@@ -1763,6 +1851,34 @@ p { margin: 0; color: var(--text-2); line-height: 1.5; font-size: 14px; }
           importFile.value = '';
         }
       });
+
+      // Discover search — buka Tab 2
+      const homeSearchInput = document.getElementById('homeSearchInput');
+      const homeSearchBtn = document.getElementById('homeSearchBtn');
+      const openDiscoverBtn = document.getElementById('openDiscoverBtn');
+
+      const goToDiscover = (query) => {
+        let url = CONFIG.DISCOVER_URL;
+        if (query && query.trim()) {
+          url += '?q=' + encodeURIComponent(query.trim());
+        }
+        window.location.href = url;
+      };
+
+      if (homeSearchBtn) {
+        homeSearchBtn.addEventListener('click', () => goToDiscover(homeSearchInput.value));
+      }
+      if (homeSearchInput) {
+        homeSearchInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            goToDiscover(homeSearchInput.value);
+          }
+        });
+      }
+      if (openDiscoverBtn) {
+        openDiscoverBtn.addEventListener('click', () => goToDiscover(''));
+      }
     }
     _bindLibraryUI() {
       const search = document.getElementById('searchInput');
